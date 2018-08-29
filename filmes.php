@@ -193,8 +193,18 @@
             $maxData = $rowMaxData['Data'];
         }
     }
+    //SELECT QUANTIDADE FILMES
+    $sqlQtdFilmes = "SELECT COUNT(DISTINCT Titulo) FROM filmes;";
+    $resultQtdFilmes = mysqli_query($conn, $sqlQtdFilmes);
+    $resultCheckQtdFilmes = mysqli_num_rows($resultQtdFilmes);
+
+    if ($resultCheckQtdFilmes > 0) {
+        while ($rowQtdFilmes = mysqli_fetch_assoc($resultQtdFilmes)) {
+            $qtdFilmes = $rowQtdFilmes['COUNT(DISTINCT Titulo)'];
+        }
+    }
     //SELECT QUANTIDADE BLURAYS
-    $sqlQtdBluray = "SELECT COUNT(Midia) FROM filmes WHERE Midia = 'Blu-ray';";
+    $sqlQtdBluray = "SELECT COUNT(Midia) FROM filmes WHERE Midia = 'Blu-ray' OR Midia = 'Blu-ray 3D';";
     $resultQtdBluray = mysqli_query($conn, $sqlQtdBluray);
     $resultCheckQtdBluray = mysqli_num_rows($resultQtdBluray);
 
@@ -213,14 +223,24 @@
             $qtdDvd = $rowQtdDvd['COUNT(Midia)'];
         }
     }
-    //SELECT DISTINCT BARCODES
-    $sqlEst = "SELECT COUNT(DISTINCT Barcode) FROM filmes WHERE Midia = 'Blu-ray';";
-    $resultEst = mysqli_query($conn, $sqlEst);
-    $resultCheckEst = mysqli_num_rows($resultEst);
+    //SELECT DISTINCT BARCODES BLURAY
+    $sqlEstBluray = "SELECT COUNT(DISTINCT Barcode) FROM filmes WHERE Midia = 'Blu-ray' OR 'Blu-ray 3D';";
+    $resultEstBluray = mysqli_query($conn, $sqlEstBluray);
+    $resultCheckEstBluray = mysqli_num_rows($resultEstBluray);
 
-    if ($resultCheckEst > 0) {
-        while ($rowEst = mysqli_fetch_assoc($resultEst)) {
-            $est = $rowEst['COUNT(DISTINCT Barcode)'];
+    if ($resultCheckEstBluray > 0) {
+        while ($rowEstBluray = mysqli_fetch_assoc($resultEstBluray)) {
+            $estBluray = $rowEstBluray['COUNT(DISTINCT Barcode)'];
+        }
+    }
+    //SELECT DISTINCT BARCODES DVD
+    $sqlEstDvd = "SELECT COUNT(DISTINCT Barcode) FROM filmes WHERE Midia = 'DVD';";
+    $resultEstDvd = mysqli_query($conn, $sqlEstDvd);
+    $resultCheckEstDvd = mysqli_num_rows($resultEstDvd);
+
+    if ($resultCheckEstDvd > 0) {
+        while ($rowEstDvd = mysqli_fetch_assoc($resultEstDvd)) {
+            $estDvd = $rowEstDvd['COUNT(DISTINCT Barcode)'];
         }
     }
     //SELECT PREENCHIMENTO INPUT DIRETOR
@@ -434,12 +454,12 @@
             if (count($filmes['titulo']) == $tamanho) {
 ?>
             <tr>
-                <td colspan="2"><?php echo '<strong>Blu-rays:</strong> ' . $qtdBluray . ' (' . $est . ')' . '<strong> | DVDs:</strong> ' . $qtdDvd ?></td>
+                <td colspan="2"><?php echo '<strong>Filmes:</strong> ' . $qtdFilmes . '<strong> | Blu-rays:</strong> ' . $qtdBluray . ' (' . $estBluray . ')' . '<strong> | DVDs:</strong> ' . $qtdDvd . ' (' . $estDvd . ')' ?></td>
                 <td><strong><?php echo $maxAno ?></strong></td>
                 <td><strong><?php echo $maxDiretor[0] . ' (' . $maxDiretor[1] . ')' ?></strong></td>
                 <td><strong><?php echo $maxDist ?></strong></td>
                 <td><strong><div class="imdbdiv" style="width: <?php echo $avgImdb * 10 ?>%"><?php echo $avgImdb ?></div></strong></td>
-                <td><strong><?php echo $sumDuracao ?> min.</strong></td>
+                <td><strong>~<?php echo round($sumDuracao / 60, 0) ?>h</strong></td>
                 <td><strong><?php echo $maxMidia ?></strong></td>
                 <td><strong><?php echo $maxProp ?></strong></td>
                 <td><strong><?php echo $maxAudio ?></strong></td>
