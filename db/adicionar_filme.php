@@ -14,8 +14,9 @@
     $replicadora = $_POST['replicadora'];
     $data = $_POST['data'];
     $barcode = $_POST['barcode'];
+    $loja = $_POST['loja'];
 
-    $sql = "INSERT INTO filmes VALUES ('$titulo', $ano, '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$data');";
+    $sql = "INSERT INTO filmes VALUES ('$titulo', $ano, '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$data', '$loja');";
     mysqli_query($conn, $sql);
 
     header("Location: ../filmes.php?adicionar=sucesso");

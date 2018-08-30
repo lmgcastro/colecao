@@ -303,6 +303,16 @@
             $repl[] = $rowRepl['Replicadora'];
         }
     }
+    //SELECT PREENCHIMENTO INPUT LOJA
+    $sqlLoja = "SELECT DISTINCT Loja FROM filmes ORDER BY Loja;";
+    $resultLoja = mysqli_query($conn, $sqlLoja);
+    $resultCheckLoja = mysqli_num_rows($resultLoja);
+
+    if ($resultCheckLoja > 0) {
+        while ($rowLoja = mysqli_fetch_assoc($resultLoja)) {
+            $loja[] = $rowLoja['Loja'];
+        }
+    }
 ?>
     <ul class="nav">
         <li><button id="novo">Novo</button></li>
@@ -331,6 +341,7 @@
                     <option value="Replicadora">Replicadora</option>
                     <option value="Barcode">Cód. de Barras</option>
                     <option value="Data">Data</option>
+                    <option value="Loja">Loja</option>
                 </select>
                 <button id="filtrar" type="submit" name="filter">Filtrar</button>
             </form>
@@ -340,9 +351,9 @@
     <img id="barcodeImg" border="5" src="">
     <div id="adicionar">
         <form action="db/adicionar_filme.php" method="POST">
-            <input type="text" name="titulo" placeholder="Título" size="27">
+            <input type="text" name="titulo" placeholder="Título" size="18">
             <input type="text" name="ano" placeholder="Ano" size="1">
-            <input list="diretor" name="diretor" placeholder="Diretor" size="15">
+            <input list="diretor" name="diretor" placeholder="Diretor" size="10">
             <datalist id="diretor">
 <?php
     for ($c = 0; $c < count($dire); $c++) {
@@ -407,6 +418,16 @@
             </datalist>
             <input id="barcodeForm" type="text" name="barcode" placeholder="Código de Barras" size="11" maxlength="13">
             <input type="date" name="data" placeholder="Data">
+            <input list="loja" name="loja" placeholder="Loja" size="9">
+            <datalist id="loja">
+<?php
+    for ($c = 0; $c < count($loja); $c++) {
+?>
+                <option value="<?php echo $loja[$c] ?>">
+<?php
+    }
+?>
+            </datalist>
             <button id="submit" type="submit" name="submit">+</button>
         </form>
     </div>
