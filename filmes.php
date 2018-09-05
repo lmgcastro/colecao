@@ -49,7 +49,27 @@
         }
 
     } else {
-        $sql = "SELECT * FROM filmes ORDER BY Titulo;";
+        $sql2 = "SELECT * FROM filmes WHERE Colecao IS NOT NULL ORDER BY Colecao, Ano;";
+        $result2 = mysqli_query($conn, $sql2);
+        $resultCheck2 = mysqli_num_rows($result2);
+        if ($resultCheck2 > 0) {
+            while ($row = mysqli_fetch_assoc($result2)) {
+                $filmes['titulo'][] = $row['Titulo'];
+                $filmes['ano'][] = $row['Ano'];
+                $filmes['diretor'][] = $row['Diretor'];
+                $filmes['distribuidora'][] = $row['Distribuidora'];
+                $filmes['imdb'][] = $row['IMDb'];
+                $filmes['duracao'][] = $row['Duracao'];
+                $filmes['midia'][] = $row['Midia'];
+                $filmes['proporcao'][] = $row['Proporcao'];
+                $filmes['audio'][] = $row['Audio'];
+                $filmes['discos'][] = $row['Discos'];
+                $filmes['replicadora'][] = $row['Replicadora'];
+                $filmes['barcode'][] = $row['Barcode'];
+                $filmes['data'][] = $row['Data'];
+            }
+        }
+        $sql = "SELECT * FROM filmes WHERE Colecao IS NULL ORDER BY Diretor, Ano;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
