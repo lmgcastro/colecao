@@ -49,7 +49,7 @@
         }
 
     } else {
-        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao) IS NULL THEN Diretor END, Ano;";
+        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Ano;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
@@ -336,7 +336,7 @@
                 <label for="≠">≠</label><input id="≠" type="checkbox" name="setDifferent" value="NOT LIKE">
                 <label for="△">△</label><input id="△" type="radio" name="setOrder" value="ASC">
                 <label for="▽">▽</label><input id="▽" type="radio" name="setOrder" value="DESC">
-                <input type="text" name="filterValue" placeholder="Buscar" size="12">
+                <input type="text" name="filterValue" placeholder="Buscar" size="10">
                 <select id="fieldsCombo" name="filterField">
                     <option id="todos" value="Todos">Todos</option>
                     <option value="Colecao">Coleção</option>
@@ -352,8 +352,8 @@
                     <option value="Discos">Discos</option>
                     <option value="Replicadora">Replicadora</option>
                     <option value="Barcode">Cód. de Barras</option>
-                    <option value="Data">Data</option>
                     <option value="Loja">Loja</option>
+                    <option value="Data">Data</option>
                 </select>
                 <button id="filtrar" type="submit" name="filter">Filtrar</button>
             </form>
@@ -363,7 +363,7 @@
     <img id="barcodeImg" border="5" src="">
     <div id="adicionar">
         <form action="db/adicionar_filme.php" method="POST">
-            <input list="colecao" name="colecao" placeholder="Coleção" size="5">
+            <input list="colecao" name="colecao" placeholder="Coleção" size="6">
             <datalist id="colecao">
 <?php
     for ($c = 0; $c < count($cole); $c++) {
@@ -385,7 +385,7 @@
     }
 ?>
             </datalist>
-            <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="8">
+            <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="9">
             <datalist id="distribuidora">
 <?php
     for ($c = 0; $c < count($dist); $c++) {
@@ -439,8 +439,8 @@
 ?>
             </datalist>
             <input id="barcodeForm" type="text" name="barcode" placeholder="Código de Barras" size="11" maxlength="13">
-            <input type="date" name="data" placeholder="Data">
             <input list="loja" name="loja" placeholder="Loja" size="9">
+            <input type="date" name="data" placeholder="Data" style="width: 125px">
             <datalist id="loja">
 <?php
     for ($c = 0; $c < count($loja); $c++) {
@@ -471,19 +471,15 @@
             <th>Data</th>
         </tr>
 <?php
-    $coleAnt = "";
-    $direAnt = "";
     if (!$noResults) {
+        $ccount = 0;
         for ($c = 0; $c < count($filmes['titulo']); $c++) {
             $barcode_year = $filmes['barcode'][$c] . "_" . $filmes['ano'][$c];
             $imdb = $filmes['imdb'][$c] * 10;
-            if ($filmes['colecao'][$c] != "" && $filmes['colecao'][$c] != $coleAnt) {
+            if ($filmes['colecao'][$c] != "" && $ccount == 0) {
+                $ccount += 1;
 ?>
-                <tr><th>$filmes['colecao'][$c]</th></tr>
-<?php
-            } else if (if ($filmes['diretor'][$c] != "" && $filmes['diretor'][$c] != $direAnt)) {
-?>
-                <tr><th>$filmes['diretor'][$c]</th></tr>
+                <tr><th colspan="14">Coleções</th></tr>
 <?php
             }
 ?>
@@ -511,20 +507,20 @@
         }
             if (count($filmes['titulo']) == $tamanho) {
 ?>
-            <tr>
-                <td colspan="2"><?php echo '<strong>Filmes:</strong> ' . $qtdFilmes . '<strong> | Blu-rays:</strong> ' . $qtdBluray . ' (' . $estBluray . ')' . '<strong> | DVDs:</strong> ' . $qtdDvd . ' (' . $estDvd . ')' ?></td>
-                <td><strong><?php echo $maxAno ?></strong></td>
-                <td><strong><?php echo $maxDiretor[0] . ' (' . $maxDiretor[1] . ')' ?></strong></td>
-                <td><strong><?php echo $maxDist ?></strong></td>
-                <td><strong><div class="imdbdiv" style="width: <?php echo $avgImdb * 10 ?>%"><?php echo $avgImdb ?></div></strong></td>
-                <td><strong>~<?php echo round($sumDuracao / 60, 0) ?>h</strong></td>
-                <td><strong><?php echo $maxMidia ?></strong></td>
-                <td><strong><?php echo $maxProp ?></strong></td>
-                <td><strong><?php echo $maxAudio ?></strong></td>
-                <td><strong><?php echo $maxDiscos ?></strong></td>
-                <td><strong><?php echo $maxRepl ?></strong></td>
-                <td><strong><?php echo $maxBarcode ?></strong></td>
-                <td><strong><?php echo $maxData ?></strong></td>
+            <tr id="footer">
+                <td colspan="2"><?php echo 'Filmes: ' . $qtdFilmes . ' | Blu-rays: ' . $qtdBluray . ' (' . $estBluray . ')' . ' | DVDs: ' . $qtdDvd . ' (' . $estDvd . ')' ?></td>
+                <td><?php echo $maxAno ?></td>
+                <td><?php echo $maxDiretor[0] . ' (' . $maxDiretor[1] . ')' ?></td>
+                <td><?php echo $maxDist ?></td>
+                <td><div id="imdbdivfooter" style="width: <?php echo $avgImdb * 10 ?>%"><?php echo $avgImdb ?></div></td>
+                <td>~<?php echo round($sumDuracao / 60, 0) ?>h</td>
+                <td><?php echo $maxMidia ?></td>
+                <td><?php echo $maxProp ?></td>
+                <td><?php echo $maxAudio ?></td>
+                <td><?php echo $maxDiscos ?></td>
+                <td><?php echo $maxRepl ?></td>
+                <td><?php echo $maxBarcode ?></td>
+                <td><?php echo $maxData ?></td>
             </tr>
 <?php
             }
