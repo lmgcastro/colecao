@@ -68,6 +68,7 @@
                 $filmes['replicadora'][] = $row['Replicadora'];
                 $filmes['barcode'][] = $row['Barcode'];
                 $filmes['data'][] = $row['Data'];
+                $filmes['colecao'][] = $row['Colecao'];
             }
         } else {
             $noResults = true;
@@ -470,10 +471,21 @@
             <th>Data</th>
         </tr>
 <?php
+    $coleAnt = "";
+    $direAnt = "";
     if (!$noResults) {
         for ($c = 0; $c < count($filmes['titulo']); $c++) {
             $barcode_year = $filmes['barcode'][$c] . "_" . $filmes['ano'][$c];
             $imdb = $filmes['imdb'][$c] * 10;
+            if ($filmes['colecao'][$c] != "" && $filmes['colecao'][$c] != $coleAnt) {
+?>
+                <tr><th>$filmes['colecao'][$c]</th></tr>
+<?php
+            } else if (if ($filmes['diretor'][$c] != "" && $filmes['diretor'][$c] != $direAnt)) {
+?>
+                <tr><th>$filmes['diretor'][$c]</th></tr>
+<?php
+            }
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
@@ -492,6 +504,10 @@
                 <td><?php echo $filmes['data'][$c] ?></td>
             </tr>
 <?php
+            if ($c > 0) {
+                $coleAnt = $filmes['colecao'][($c - 1)];
+                $direAnt = $filmes['diretor'][($c - 1)];
+            }
         }
             if (count($filmes['titulo']) == $tamanho) {
 ?>
