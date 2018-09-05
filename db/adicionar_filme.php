@@ -1,6 +1,7 @@
 <?php
     include_once "dbh.php";
 
+    $colecao = $_POST['colecao'];
     $titulo = $_POST['titulo'];
     $ano = $_POST['ano'];
     $diretor = $_POST['diretor'];
@@ -16,7 +17,7 @@
     $barcode = $_POST['barcode'];
     $loja = $_POST['loja'];
 
-    $sql = "INSERT INTO filmes VALUES ('$titulo', $ano, '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$data', '$loja');";
+    $sql = "INSERT INTO filmes VALUES ('$titulo', $ano, '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$data', '$loja', '$colecao');";
     mysqli_query($conn, $sql);
 
     header("Location: ../filmes.php?adicionar=sucesso");
