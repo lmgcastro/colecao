@@ -49,7 +49,7 @@
         }
 
     } else {
-        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao) IS NOT NULL THEN Ano ELSE Titulo END;";
+        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao) IS NULL THEN Diretor END, Ano;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
