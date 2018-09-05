@@ -49,27 +49,7 @@
         }
 
     } else {
-        $sql2 = "SELECT * FROM filmes WHERE Colecao IS NOT NULL ORDER BY Colecao, Ano;";
-        $result2 = mysqli_query($conn, $sql2);
-        $resultCheck2 = mysqli_num_rows($result2);
-        if ($resultCheck2 > 0) {
-            while ($row = mysqli_fetch_assoc($result2)) {
-                $filmes['titulo'][] = $row['Titulo'];
-                $filmes['ano'][] = $row['Ano'];
-                $filmes['diretor'][] = $row['Diretor'];
-                $filmes['distribuidora'][] = $row['Distribuidora'];
-                $filmes['imdb'][] = $row['IMDb'];
-                $filmes['duracao'][] = $row['Duracao'];
-                $filmes['midia'][] = $row['Midia'];
-                $filmes['proporcao'][] = $row['Proporcao'];
-                $filmes['audio'][] = $row['Audio'];
-                $filmes['discos'][] = $row['Discos'];
-                $filmes['replicadora'][] = $row['Replicadora'];
-                $filmes['barcode'][] = $row['Barcode'];
-                $filmes['data'][] = $row['Data'];
-            }
-        }
-        $sql = "SELECT * FROM filmes WHERE Colecao IS NULL ORDER BY Diretor, Ano;";
+        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao) IS NOT NULL THEN Ano ELSE Titulo END;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
@@ -263,6 +243,16 @@
             $estDvd = $rowEstDvd['COUNT(DISTINCT Barcode)'];
         }
     }
+    //SELECT PREENCHIMENTO INPUT COLECAO
+    $sqlCole = "SELECT DISTINCT Colecao FROM filmes WHERE Colecao IS NOT NULL ORDER BY Colecao;";
+    $resultCole = mysqli_query($conn, $sqlCole);
+    $resultCheckCole = mysqli_num_rows($resultCole);
+
+    if ($resultCheckCole > 0) {
+        while ($rowCole = mysqli_fetch_assoc($resultCole)) {
+            $cole[] = $rowCole['Colecao'];
+        }
+    }
     //SELECT PREENCHIMENTO INPUT DIRETOR
     $sqlDire = "SELECT DISTINCT Diretor FROM filmes ORDER BY Diretor;";
     $resultDire = mysqli_query($conn, $sqlDire);
@@ -348,6 +338,7 @@
                 <input type="text" name="filterValue" placeholder="Buscar" size="12">
                 <select id="fieldsCombo" name="filterField">
                     <option id="todos" value="Todos">Todos</option>
+                    <option value="Colecao">Coleção</option>
                     <option value="Titulo">Título</option>
                     <option value="Ano">Ano</option>
                     <option value="Diretor">Diretor</option>
@@ -371,9 +362,19 @@
     <img id="barcodeImg" border="5" src="">
     <div id="adicionar">
         <form action="db/adicionar_filme.php" method="POST">
-            <input type="text" name="titulo" placeholder="Título" size="18">
+            <input list="colecao" name="colecao" placeholder="Coleção" size="5">
+            <datalist id="colecao">
+<?php
+    for ($c = 0; $c < count($cole); $c++) {
+?>
+                <option value="<?php echo $cole[$c] ?>">
+<?php
+    }
+?>
+            </datalist>
+            <input type="text" name="titulo" placeholder="Título" size="12">
             <input type="text" name="ano" placeholder="Ano" size="1">
-            <input list="diretor" name="diretor" placeholder="Diretor" size="10">
+            <input list="diretor" name="diretor" placeholder="Diretor" size="8">
             <datalist id="diretor">
 <?php
     for ($c = 0; $c < count($dire); $c++) {
@@ -383,7 +384,7 @@
     }
 ?>
             </datalist>
-            <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="10">
+            <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="8">
             <datalist id="distribuidora">
 <?php
     for ($c = 0; $c < count($dist); $c++) {
