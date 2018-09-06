@@ -476,7 +476,7 @@
         for ($c = 0; $c < count($filmes['titulo']); $c++) {
             $barcode_year = $filmes['barcode'][$c] . "_" . $filmes['ano'][$c];
             $imdb = $filmes['imdb'][$c] * 10;
-            if ($filmes['colecao'][$c] != "" && $ccount == 0) {
+            if ($filmes['colecao'][$c] != "" && $ccount == 0 && !isset($_POST['filter'])) {
                 $ccount += 1;
 ?>
                 <tr><th colspan="14">Coleções</th></tr>
