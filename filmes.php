@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Filmes</title>
-    <link rel="stylesheet" href="css/filmes.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php
@@ -361,7 +361,7 @@
     </ul>
     <img id="posterImg" border="5" src="">
     <img id="barcodeImg" border="5" src="">
-    <div id="adicionar">
+    <div id="addFilme">
         <form action="db/adicionar_filme.php" method="POST">
             <input list="colecao" name="colecao" placeholder="Coleção" size="6">
             <datalist id="colecao">
@@ -453,7 +453,7 @@
             <button id="submit" type="submit" name="submit">+</button>
         </form>
     </div>
-    <table>
+    <table id="tblFilmes">
         <tr>
             <th>Nº</th>
             <th>Título original</th>

@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Filmes</title>
-    <link rel="stylesheet" href="css/mangas.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php
@@ -87,7 +87,7 @@
         <li><a href="quadrinhos.php">Quadrinhos</a></li>
         <li><a id="atual" href="#">Mangás</a></li>
     </ul>
-    <div id="mangaNovo">
+    <div id="addMangaNovo">
         <form action="db/adicionar_manga.php" method="POST">
             <input type="text" name="tituloNovo" placeholder="Título" size="25">
             <input type="text" name="volumeNovo" placeholder="Volume" size="3">
@@ -127,7 +127,7 @@
             </datalist>
             <button type="submit" name="submit">Adicionar</button>
         </div>
-        <div id="mangaExistente">
+        <div id="addManga">
             <select id="tituloExistente" name="tituloExistente">
                 <option value=""  selected disabled hidden>Selecione</option>
 <?php
@@ -143,7 +143,7 @@
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
-    <table>
+    <table id="tblMangas">
         <tr>
             <th>Nº</th>
             <th>Título</th>

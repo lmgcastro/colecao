@@ -35,7 +35,7 @@ $(function() {
     });
 
     $('#novo').on('click', function() {
-        $('#adicionar').toggle();
+        $('#addFilme').toggle();
     });
 
     $('#submit').on('click', function() {

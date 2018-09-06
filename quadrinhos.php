@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Filmes</title>
-    <link rel="stylesheet" href="css/quadrinhos.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php
@@ -63,7 +63,7 @@
         <li><a id="atual" href="#">Quadrinhos</a></li>
         <li><a href="mangas.php">Mangás</a></li>
     </ul>
-    <div id="adicionar">
+    <div id="addQuadrinho">
         <form action="db/adicionar_quadrinho.php" method="POST">
             <input type="text" name="titulo" placeholder="Título" size="45">
             <input list="artistas" name="artistas" placeholder="Artistas" size="45">
@@ -99,7 +99,7 @@
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
-    <table>
+    <table id="tblQuadrinhos">
         <tr>
             <th>Nº</th>
             <th>Lido</th>

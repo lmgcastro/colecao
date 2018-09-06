@@ -53,7 +53,7 @@
     margin-left: -113px;
 }
 
-table {
+#tblFilmes {
     width: 100%;
     border-collapse: collapse;
 }
@@ -92,7 +92,7 @@ td {
     background-color: white;
 }
 
-#adicionar {
+#addFilme {
     display: none;
     border: 1px solid black;
 }
@@ -100,4 +100,82 @@ td {
 #footer {
     background-color: black; 
     color: white;
+}
+
+#tblCds {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#addCd {
+    width: 80%;
+    margin: auto;
+    display: none;
+    border: 1px solid black;
+}
+
+#tblQuadrinhos {
+    width: 85%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.lido {
+    padding: 0 10px 0 10px;
+    border: none;
+    outline: none;
+    color: black;
+}
+
+#addQuadrinho {
+    width: 85%;
+    margin: auto;
+    display: none;
+    border: 1px solid black;
+}
+
+#botaoExistente {
+    color: white;
+    background-color: black;
+}
+
+#botaoNovo {
+    color: white;
+    background-color: black;
+}
+
+#tblMangas {
+    width: 85%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.completo {
+    width: 100%
+}
+
+.lido {
+    padding: 0;
+    border: none;
+    outline: none;
+    color: black;
+}
+
+#addManga {
+    width: 25%;
+    margin: auto;
+    display: none;
+    border: 1px solid black;
+}
+
+#addMangaNovo {
+    width: 67%;
+    margin: auto;
+    display: none;
+    border: 1px solid black;
+}
+
+.novoManga {
+    display: none;
 }

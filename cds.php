@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Filmes</title>
-    <link rel="stylesheet" href="css/cds.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php
@@ -55,7 +55,7 @@
         <li><a href="quadrinhos.php">Quadrinhos</a></li>
         <li><a href="mangas.php">Mangás</a></li>
     </ul>
-    <div id="adicionar">
+    <div id="addCd">
         <form action="db/adicionar_cd.php" method="POST">
             <input type="text" name="titulo" placeholder="Título" size="30">
             <input list="artista" name="artista" placeholder="Artista" size="25">
@@ -85,7 +85,7 @@
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
-    <table>
+    <table id="tblCds">
         <tr>
             <th>Nº</th>
             <th>Título</th>

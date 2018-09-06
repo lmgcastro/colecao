@@ -1,5 +1,5 @@
 $(function() {
     $('#novo').on('click', function() {
-        $('#adicionar').toggle();
+        $('#addCd').toggle();
     });
 });

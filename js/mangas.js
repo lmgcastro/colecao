@@ -1,10 +1,10 @@
 $(function() {
     $('#botaoExistente').on('click', function() {
-        $('#mangaNovo').hide();
-        $('#mangaExistente').toggle();
+        $('#addMangaNovo').hide();
+        $('#addManga').toggle();
     });
     $('#botaoNovo').on('click', function() {
-        $('#mangaExistente').hide();
-        $('#mangaNovo').toggle();
+        $('#addManga').hide();
+        $('#addMangaNovo').toggle();
     });
 });
