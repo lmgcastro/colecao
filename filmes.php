@@ -49,7 +49,7 @@
         }
 
     } else {
-        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Ano;";
+        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Ano, Titulo;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
