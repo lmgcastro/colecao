@@ -93,6 +93,8 @@ td {
 }
 
 #addFilme {
+    width: 90%;
+    margin: auto;
     display: none;
     border: 1px solid black;
 }
