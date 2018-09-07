@@ -49,7 +49,7 @@
         }
 
     } else {
-        $sql = "SELECT Colecao, Titulo, year(Lancamento), Diretor, Distribuidora, IMDb, Duracao, Midia, Proporcao, Audio, Discos, Replicadora, Barcode, Data FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento;";
+        $sql = "SELECT *, year(Lancamento) FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
@@ -57,7 +57,7 @@
             while ($row = mysqli_fetch_assoc($result)) {
                 $filmes['colecao'][] = $row['Colecao'];
                 $filmes['titulo'][] = $row['Titulo'];
-                $filmes['lancamento'][] = $row['year(Lancamento)'];
+                $filmes['lancamento'][] = $row['Lancamento'];
                 $filmes['diretor'][] = $row['Diretor'];
                 $filmes['distribuidora'][] = $row['Distribuidora'];
                 $filmes['imdb'][] = $row['IMDb'];
@@ -69,18 +69,19 @@
                 $filmes['replicadora'][] = $row['Replicadora'];
                 $filmes['barcode'][] = $row['Barcode'];
                 $filmes['data'][] = $row['Data'];
+                $filmes['ano'][] = $row['year(Lancamento)'];
             }
         } else {
             $noResults = true;
         }
-    //SELECT MAX LANCAMENTO
-    $sqlMaxLanc = "SELECT year(Lancamento), COUNT(*) FROM filmes GROUP BY Lancamento ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxLanc = mysqli_query($conn, $sqlMaxLanc);
-    $resultCheckMaxLanc = mysqli_num_rows($resultMaxLanc);
+    //SELECT MAX ANO
+    $sqlMaxAno = "SELECT year(Lancamento), COUNT(*) FROM filmes GROUP BY Lancamento ORDER BY COUNT(*) DESC LIMIT 1;";
+    $resultMaxAno = mysqli_query($conn, $sqlMaxAno);
+    $resultCheckMaxAno = mysqli_num_rows($resultMaxAno);
 
-    if ($resultCheckMaxLanc > 0) {
-        while ($rowMaxLanc = mysqli_fetch_assoc($resultMaxLanc)) {
-            $maxLanc = $rowMaxLanc['year(Lancamento)'];
+    if ($resultCheckMaxAno > 0) {
+        while ($rowMaxAno = mysqli_fetch_assoc($resultMaxAno)) {
+            $maxAno = $rowMaxAno['year(Lancamento)'];
         }
     }
     //SELECT MAX DIRETOR
@@ -509,7 +510,7 @@
 ?>
             <tr id="footer">
                 <td colspan="2"><?php echo 'Filmes: ' . $qtdFilmes . ' | Blu-rays: ' . $qtdBluray . ' (' . $estBluray . ')' . ' | DVDs: ' . $qtdDvd . ' (' . $estDvd . ')' ?></td>
-                <td><?php echo $maxLanc ?></td>
+                <td><?php echo $maxAno ?></td>
                 <td><?php echo $maxDiretor[0] . ' (' . $maxDiretor[1] . ')' ?></td>
                 <td><?php echo $maxDist ?></td>
                 <td><div id="imdbdivfooter" style="width: <?php echo $avgImdb * 10 ?>%"><?php echo $avgImdb ?></div></td>
