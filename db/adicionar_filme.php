@@ -9,7 +9,23 @@
     $imdb = $_POST['imdb'];
     $duracao = $_POST['duracao'];
     $midia = $_POST['midia'];
-    $regiao = $_POST['regiao'];
+    if (isset($_POST['regiaoA']) && !isset($_POST['regiaoB']) && !isset($_POST['regiaoC'])) {
+        $regiao = 'A';
+    } else if (!isset($_POST['regiaoA']) && isset($_POST['regiaoB']) && !isset($_POST['regiaoC'])) {
+        $regiao = 'B';
+    } else if (!isset($_POST['regiaoA']) && !isset($_POST['regiaoB']) && isset($_POST['regiaoC'])) {
+        $regiao = 'C';
+    } else if (isset($_POST['regiaoA']) && isset($_POST['regiaoB']) && !isset($_POST['regiaoC'])) {
+        $regiao = 'AB';
+    } else if (isset($_POST['regiaoA']) && !isset($_POST['regiaoB']) && isset($_POST['regiaoC'])) {
+        $regiao = 'AC';
+    } else if (!isset($_POST['regiaoA']) && isset($_POST['regiaoB']) && isset($_POST['regiaoC'])) {
+        $regiao = 'BC';
+    } else if (isset($_POST['regiaoA']) && isset($_POST['regiaoB']) && isset($_POST['regiaoC'])) {
+        $regiao = 'ABC';
+    } else {
+        $regiao = ' ';
+    }
     $proporcao = $_POST['proporcao'];
     $audio = $_POST['audio'];
     $discos = $_POST['discos'];
