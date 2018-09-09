@@ -63,6 +63,7 @@
                 $filmes['imdb'][] = $row['IMDb'];
                 $filmes['duracao'][] = $row['Duracao'];
                 $filmes['midia'][] = $row['Midia'];
+                $filmes['regiao'][] = $row['Regiao'];
                 $filmes['proporcao'][] = $row['Proporcao'];
                 $filmes['audio'][] = $row['Audio'];
                 $filmes['discos'][] = $row['Discos'];
@@ -126,13 +127,23 @@
         }
     }
     //SELECT MAX MIDIA
-    $sqlMaxMidia = "SELECT Midia, COUNT(*) FROM filmes GROUP BY Lancamento ORDER BY COUNT(*) DESC LIMIT 1;";
+    $sqlMaxMidia = "SELECT Midia, COUNT(*) FROM filmes GROUP BY Midia ORDER BY COUNT(*) DESC LIMIT 1;";
     $resultMaxMidia = mysqli_query($conn, $sqlMaxMidia);
     $resultCheckMaxMidia = mysqli_num_rows($resultMaxMidia);
 
     if ($resultCheckMaxMidia > 0) {
         while ($rowMaxMidia = mysqli_fetch_assoc($resultMaxMidia)) {
             $maxMidia = $rowMaxMidia['Midia'];
+        }
+    }
+    //SELECT MAX REGIAO
+    $sqlMaxRegiao = "SELECT Regiao, COUNT(*) FROM filmes GROUP BY Regiao ORDER BY COUNT(*) DESC LIMIT 1;";
+    $resultMaxRegiao = mysqli_query($conn, $sqlMaxRegiao);
+    $resultCheckMaxRegiao = mysqli_num_rows($resultMaxRegiao);
+
+    if ($resultCheckMaxRegiao > 0) {
+        while ($rowMaxRegiao = mysqli_fetch_assoc($resultMaxRegiao)) {
+            $maxRegiao = $rowMaxRegiao['Regiao'];
         }
     }
     //SELECT MAX PROPORCAO
@@ -348,6 +359,7 @@
                     <option value="IMDb">IMDb</option>
                     <option value="Duracao">Duração</option>
                     <option value="Midia">Mídia</option>
+                    <option value="Regiao">Região</option>
                     <option value="Proporcao">Proporção</option>
                     <option value="Audio">Áudio</option>
                     <option value="Discos">Discos</option>
@@ -408,6 +420,8 @@
     }
 ?>
             </datalist>
+            <select id="regiao">
+            </select>
             <input list="proporcao" name="proporcao" placeholder="Proporção" size="20">
             <datalist id="proporcao">
 <?php
@@ -493,6 +507,7 @@
                 <td><div class="imdbdiv" style="width: <?php echo $imdb ?>%"><?php echo $filmes['imdb'][$c] ?></div></td>
                 <td><?php echo $filmes['duracao'][$c] ?> min.</td>
                 <td><?php echo $filmes['midia'][$c] ?></td>
+                <td><?php echo $filmes['regiao'][$c] ?></td>
                 <td><?php echo $filmes['proporcao'][$c] ?></td>
                 <td><?php echo $filmes['audio'][$c] ?></td>
                 <td><?php echo $filmes['discos'][$c] ?></td>
@@ -516,6 +531,7 @@
                 <td><div id="imdbdivfooter" style="width: <?php echo $avgImdb * 10 ?>%"><?php echo $avgImdb ?></div></td>
                 <td>~<?php echo round($sumDuracao / 60, 0) ?>h</td>
                 <td><?php echo $maxMidia ?></td>
+                <td><?php echo $maxRegiao ?></td>
                 <td><?php echo $maxProp ?></td>
                 <td><?php echo $maxAudio ?></td>
                 <td><?php echo $maxDiscos ?></td>
