@@ -420,8 +420,11 @@
     }
 ?>
             </datalist>
-            <select id="regiao">
-            </select>
+            <label>Região 
+            <label><input type="checkbox" name="regiaoA" value="A">A</label>
+            <label><input type="checkbox" name="regiaoB" value="B">B</label>
+            <label><input type="checkbox" name="regiaoC" value="C">C</label>
+            </label>
             <input list="proporcao" name="proporcao" placeholder="Proporção" size="20">
             <datalist id="proporcao">
 <?php
