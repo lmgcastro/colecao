@@ -1,7 +1,7 @@
 $(function() {
     $('#△').prop('disabled', true);
     $('#▽').prop('disabled', true);
-    $('#fieldsCombo').change(function () {
+    $('#fieldsCombo').change(function() {
         if (this.value == 'Todos') {
             $('#△').prop('checked', false);
             $('#▽').prop('checked', false);
