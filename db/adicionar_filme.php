@@ -36,11 +36,11 @@
     $audio = $_POST['audio'];
     $discos = $_POST['discos'];
     $replicadora = $_POST['replicadora'];
-    $data = $_POST['data'];
     $barcode = $_POST['barcode'];
     $loja = $_POST['loja'];
+    $data = $_POST['data'];
 
-    $sql = "INSERT INTO filmes VALUES ('$colecao', '$titulo', '$lancamento', '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$regiao', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$data', '$loja');";
+    $sql = "INSERT INTO filmes VALUES ('$colecao', '$titulo', '$lancamento', '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$regiao', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$loja', '$data');";
     mysqli_query($conn, $sql);
 
     header("Location: ../filmes.php?adicionar=sucesso");

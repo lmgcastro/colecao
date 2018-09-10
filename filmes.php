@@ -76,7 +76,7 @@
             $noResults = true;
         }
     //SELECT MAX ANO
-    $sqlMaxAno = "SELECT year(Lancamento), COUNT(*) FROM filmes GROUP BY Lancamento ORDER BY COUNT(*) DESC LIMIT 1;";
+    $sqlMaxAno = "SELECT year(Lancamento), COUNT(*) FROM filmes GROUP BY year(Lancamento) ORDER BY COUNT(*) DESC LIMIT 1;";
     $resultMaxAno = mysqli_query($conn, $sqlMaxAno);
     $resultCheckMaxAno = mysqli_num_rows($resultMaxAno);
 
@@ -376,7 +376,7 @@
     <img id="barcodeImg" border="5" src="">
     <div id="addFilme">
         <form action="db/adicionar_filme.php" method="POST">
-            <input list="colecao" name="colecao" placeholder="Coleção" size="25">
+            <input list="colecao" name="colecao" placeholder="Coleção" size="20">
             <datalist id="colecao">
 <?php
     for ($c = 0; $c < count($cole); $c++) {
@@ -386,7 +386,7 @@
     }
 ?>
             </datalist>
-            <input type="text" name="titulo" placeholder="Título" size="25">
+            <input type="text" name="titulo" placeholder="Título" size="24">
             <label>Lançamento <input type="date" name="lancamento"></label>
             <input list="diretor" name="diretor" placeholder="Diretor" size="25">
             <datalist id="diretor">
@@ -398,7 +398,7 @@
     }
 ?>
             </datalist>
-            <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="25">
+            <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="15">
             <datalist id="distribuidora">
 <?php
     for ($c = 0; $c < count($dist); $c++) {
@@ -410,7 +410,7 @@
             </datalist>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
             <input type="text" name="duracao" placeholder="Duração" size="5">
-            <input list="midia" name="midia" placeholder="Mídia" size="20">
+            <input list="midia" name="midia" placeholder="Mídia" size="10">
             <datalist id="midia">
 <?php
     for ($c = 0; $c < count($midia); $c++) {
@@ -481,6 +481,7 @@
             <th>IMDb</th>
             <th>Duração</th>
             <th>Mídia</th>
+            <th>Região</th>
             <th>Proporção</th>
             <th>Áudio</th>
             <th>Discos</th>
@@ -492,19 +493,19 @@
     if (!$noResults) {
         $ccount = 0;
         for ($c = 0; $c < count($filmes['titulo']); $c++) {
-            $barcode_year = $filmes['barcode'][$c] . "_" . $filmes['lancamento'][$c];
+            $barcode_year = $filmes['barcode'][$c] . "_" . $filmes['ano'][$c];
             $imdb = $filmes['imdb'][$c] * 10;
             if ($filmes['colecao'][$c] != "" && $ccount == 0 && !isset($_POST['filter'])) {
                 $ccount += 1;
 ?>
-                <tr><th colspan="14">Coleções</th></tr>
+                <tr><th colspan="15">Coleções</th></tr>
 <?php
             }
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
                 <td id="<?php echo $barcode_year ?>" class="titulo"><?php echo $filmes['titulo'][$c] ?></td>
-                <td><?php echo $filmes['lancamento'][$c] ?></td>
+                <td><?php echo $filmes['ano'][$c] ?></td>
                 <td><?php echo $filmes['diretor'][$c] ?></td>
                 <td><?php echo $filmes['distribuidora'][$c] ?></td>
                 <td><div class="imdbdiv" style="width: <?php echo $imdb ?>%"><?php echo $filmes['imdb'][$c] ?></div></td>
