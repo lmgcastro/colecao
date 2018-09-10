@@ -9,7 +9,7 @@
     $imdb = $_POST['imdb'];
     $duracao = $_POST['duracao'];
     $midia = $_POST['midia'];
-    if (isset($_POST['regiaoA']) && !isset($_POST['regiaoB']) && !isset($_POST['regiaoC'])) {
+    /*if (isset($_POST['regiaoA']) && !isset($_POST['regiaoB']) && !isset($_POST['regiaoC'])) {
         $regiao = 'A';
     } else if (!isset($_POST['regiaoA']) && isset($_POST['regiaoB']) && !isset($_POST['regiaoC'])) {
         $regiao = 'B';
@@ -25,6 +25,12 @@
         $regiao = 'ABC';
     } else {
         $regiao = ' ';
+    }*/
+    $regiao = '';
+    if (!empty($_POST['regiao'])) {
+        foreach ($_POST['regiao'] as $selected) {
+            $regiao .= $selected;
+        }
     }
     $proporcao = $_POST['proporcao'];
     $audio = $_POST['audio'];
