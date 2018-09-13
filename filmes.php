@@ -41,11 +41,11 @@
             $orderColumn = 'Titulo';
         }
         if ($filterField == 'Todos') {
-            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, Lancamento, Diretor, Distribuidora, IMDb, Midia, Proporcao, Audio, Replicadora, Barcode, Data) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
+            $sql = "SELECT *, year(Lancamento) FROM filmes WHERE CONCAT(Titulo, Lancamento, Diretor, Distribuidora, IMDb, Midia, Proporcao, Audio, Replicadora, Barcode, Data) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
         } else if ($filterField == 'IMDb') {
-            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+            $sql = "SELECT *, year(Lancamento) FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         } else {
-            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+            $sql = "SELECT *, year(Lancamento) FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         }
 
     } else {
