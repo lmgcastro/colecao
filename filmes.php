@@ -34,6 +34,8 @@
         if (isset($_POST['setOrder'])) {
             if ($filterField == 'Titulo') {
                 $orderColumn = $filterField . ' ' . $_POST['setOrder'];
+            } else if ($filterField == 'Data') {
+                $orderColumn = $filterField . ' ' . $_POST['setOrder'] . ', Lancamento';
             } else {
                 $orderColumn = $filterField . ' ' . $_POST['setOrder'] . ', Titulo';
             }
