@@ -199,13 +199,14 @@
         }
     }
     //SELECT MAX DATA
-    $sqlMaxData = "SELECT Data, COUNT(*) FROM filmes GROUP BY Data ORDER BY COUNT(*) DESC LIMIT 1;";
+    $sqlMaxData = "SELECT CASE WHEN month(Data) < 10 THEN CONCAT(0, month(Data), '/', year(Data)) ELSE CONCAT(month(Data), '/', year(Data)) END AS MesAno, COUNT(*) FROM filmes GROUP BY CONCAT(month(Data), '/', year(Data)) ORDER BY COUNT(*) DESC LIMIT 1;";
     $resultMaxData = mysqli_query($conn, $sqlMaxData);
     $resultCheckMaxData = mysqli_num_rows($resultMaxData);
 
     if ($resultCheckMaxData > 0) {
         while ($rowMaxData = mysqli_fetch_assoc($resultMaxData)) {
-            $maxData = $rowMaxData['Data'];
+            $maxData[0] = $rowMaxData['MesAno'];
+            $maxData[1] = $rowMaxData['COUNT(*)'];
         }
     }
     //SELECT QUANTIDADE FILMES
@@ -543,7 +544,7 @@
                 <td><?php echo $maxDiscos ?></td>
                 <td><?php echo $maxRepl ?></td>
                 <td><?php echo $maxBarcode ?></td>
-                <td><?php echo $maxData ?></td>
+                <td><?php echo $maxData[0] . ' (' . $maxData[1] . ')' ?></td>
             </tr>
 <?php
             }
