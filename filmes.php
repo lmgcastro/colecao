@@ -549,7 +549,7 @@
             }
         } else {
 ?>
-        <tr><td colspan="14"><strong>Nenhum registro encontrado!</strong></td></tr>
+        <tr><td colspan="15"><strong>Nenhum registro encontrado!</strong></td></tr>
 <?php
 }
 ?>
