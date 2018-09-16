@@ -43,15 +43,15 @@
             $orderColumn = 'Titulo';
         }
         if ($filterField == 'Todos') {
-            $sql = "SELECT *, year(Lancamento) FROM filmes WHERE CONCAT(Titulo, Lancamento, Diretor, Distribuidora, IMDb, Midia, Proporcao, Audio, Replicadora, Barcode, Data) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
+            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, Lancamento, Diretor, Distribuidora, IMDb, Midia, Proporcao, Audio, Replicadora, Barcode, CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
         } else if ($filterField == 'IMDb') {
-            $sql = "SELECT *, year(Lancamento) FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         } else {
-            $sql = "SELECT *, year(Lancamento) FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         }
 
     } else {
-        $sql = "SELECT *, year(Lancamento) FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento;";
+        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento;";
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
@@ -59,7 +59,7 @@
             while ($row = mysqli_fetch_assoc($result)) {
                 $filmes['colecao'][] = $row['Colecao'];
                 $filmes['titulo'][] = $row['Titulo'];
-                $filmes['ano'][] = $row['year(Lancamento)'];
+                $filmes['ano'][] = date('Y', strtotime($row['Lancamento']));
                 $filmes['diretor'][] = $row['Diretor'];
                 $filmes['distribuidora'][] = $row['Distribuidora'];
                 $filmes['imdb'][] = $row['IMDb'];
@@ -71,7 +71,7 @@
                 $filmes['discos'][] = $row['Discos'];
                 $filmes['replicadora'][] = $row['Replicadora'];
                 $filmes['barcode'][] = $row['Barcode'];
-                $filmes['data'][] = $row['Data'];
+                $filmes['data'][] = date('d/m/Y', strtotime($row['Data']));
             }
         } else {
             $noResults = true;
@@ -198,13 +198,13 @@
         }
     }
     //SELECT MAX DATA
-    $sqlMaxData = "SELECT CASE WHEN month(Data) < 10 THEN CONCAT(0, month(Data), '/', year(Data)) ELSE CONCAT(month(Data), '/', year(Data)) END AS MesAno, COUNT(*) FROM filmes GROUP BY CONCAT(month(Data), '/', year(Data)) ORDER BY COUNT(*) DESC LIMIT 1;";
+    $sqlMaxData = "SELECT Data, COUNT(*) FROM filmes GROUP BY CONCAT(month(Data), year(Data)) ORDER BY COUNT(*) DESC LIMIT 1;";
     $resultMaxData = mysqli_query($conn, $sqlMaxData);
     $resultCheckMaxData = mysqli_num_rows($resultMaxData);
 
     if ($resultCheckMaxData > 0) {
         while ($rowMaxData = mysqli_fetch_assoc($resultMaxData)) {
-            $maxData[0] = $rowMaxData['MesAno'];
+            $maxData[0] = date('m/Y', strtotime($rowMaxData['Data']));
             $maxData[1] = $rowMaxData['COUNT(*)'];
         }
     }
