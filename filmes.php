@@ -59,7 +59,7 @@
             while ($row = mysqli_fetch_assoc($result)) {
                 $filmes['colecao'][] = $row['Colecao'];
                 $filmes['titulo'][] = $row['Titulo'];
-                $filmes['lancamento'][] = $row['Lancamento'];
+                $filmes['ano'][] = $row['year(Lancamento)'];
                 $filmes['diretor'][] = $row['Diretor'];
                 $filmes['distribuidora'][] = $row['Distribuidora'];
                 $filmes['imdb'][] = $row['IMDb'];
@@ -72,7 +72,6 @@
                 $filmes['replicadora'][] = $row['Replicadora'];
                 $filmes['barcode'][] = $row['Barcode'];
                 $filmes['data'][] = $row['Data'];
-                $filmes['ano'][] = $row['year(Lancamento)'];
             }
         } else {
             $noResults = true;
