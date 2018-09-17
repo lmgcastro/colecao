@@ -18,33 +18,13 @@
 
     if ($resultCheck > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $cds['titulo'][] = $row['Titulo'];
-            $cds['artista'][] = $row['Artista'];
-            $cds['ano'][] = $row['Ano'];
-            $cds['selo'][] = $row['Selo'];
-            $cds['duracao'][] = $row['Duracao'];
-            $cds['discos'][] = $row['Discos'];
-            $cds['data'][] = $row['Data'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT ARTISTA
-    $sqlArtista = "SELECT DISTINCT Artista FROM cds ORDER BY Artista;";
-    $resultArtista = mysqli_query($conn, $sqlArtista);
-    $resultCheckArtista = mysqli_num_rows($resultArtista);
-
-    if ($resultCheckArtista > 0) {
-        while ($rowArtista = mysqli_fetch_assoc($resultArtista)) {
-            $artista[] = $rowArtista['Artista'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT SELO
-    $sqlSelo = "SELECT DISTINCT Selo FROM cds ORDER BY Selo;";
-    $resultSelo = mysqli_query($conn, $sqlSelo);
-    $resultCheckSelo = mysqli_num_rows($resultSelo);
-
-    if ($resultCheckSelo > 0) {
-        while ($rowSelo = mysqli_fetch_assoc($resultSelo)) {
-            $selo[] = $rowSelo['Selo'];
+            $titulo[] = $row['Titulo'];
+            $artista[] = $row['Artista'];
+            $ano[] = $row['Ano'];
+            $selo[] = $row['Selo'];
+            $duracao[] = $row['Duracao'];
+            $discos[] = $row['Discos'];
+            $data[] = $row['Data'];
         }
     }
 ?>
@@ -59,26 +39,28 @@
         <form action="db/adicionar_cd.php" method="POST">
             <input type="text" name="titulo" placeholder="Título" size="30">
             <input list="artista" name="artista" placeholder="Artista" size="25">
-            <datalist id="artista">
 <?php
-    for ($c = 0; $c < count($artista); $c++) {
-?>
-                <option value="<?php echo $artista[$c] ?>">
-<?php
+    echo '<datalist id="artista">';
+    $temp_unique_artista = array_unique($artista);
+    $unique_artista = array_values($temp_unique_artista);
+    sort($unique_artista);
+    for ($c = 0; $c < count($unique_artista); $c++) {
+            echo '<option value="' . $unique_artista[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input type="text" name="ano" placeholder="Ano" size="5">
             <input list="selo" name="selo" placeholder="Selo" size="15">
-            <datalist id="selo">
 <?php
-    for ($c = 0; $c < count($selo); $c++) {
-?>
-                <option value="<?php echo $selo[$c] ?>">
-<?php
+    echo '<datalist id="selo">';
+    $temp_unique_selo = array_unique($selo);
+    $unique_selo = array_values($temp_unique_selo);
+    sort($unique_selo);
+    for ($c = 0; $c < count($unique_selo); $c++) {
+            echo '<option value="' . $unique_selo[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input type="text" name="duracao" placeholder="Duração" size="10">
             <input type="text" name="discos" placeholder="Discos" size="5">
             <input type="date" name="data" placeholder="Data">
@@ -97,17 +79,17 @@
             <th>Data</th>
         </tr>
 <?php
-    for ($c = 0; $c < count($cds['titulo']); $c++) {
+    for ($c = 0; $c < count($titulo); $c++) {
 ?>
         <tr>
             <td><?php echo $c + 1 ?></td>
-            <td class="titulo"><?php echo $cds['titulo'][$c] ?></td>
-            <td><?php echo $cds['artista'][$c] ?></td>
-            <td><?php echo $cds['ano'][$c] ?></td>
-            <td><?php echo $cds['selo'][$c] ?></td>
-            <td><?php echo $cds['duracao'][$c] ?></td>
-            <td><?php echo $cds['discos'][$c] ?></td>
-            <td><?php echo $cds['data'][$c] ?></td>
+            <td class="titulo"><?php echo $titulo[$c] ?></td>
+            <td><?php echo $artista[$c] ?></td>
+            <td><?php echo $ano[$c] ?></td>
+            <td><?php echo $selo[$c] ?></td>
+            <td><?php echo $duracao[$c] ?></td>
+            <td><?php echo $discos[$c] ?></td>
+            <td><?php echo $data[$c] ?></td>
         </tr>
 <?php
     }
