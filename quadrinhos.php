@@ -18,41 +18,11 @@
 
     if ($resultCheck > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $quadrinhos['titulo'][] = $row['Titulo'];
-            $quadrinhos['artistas'][] = $row['Artistas'];
-            $quadrinhos['editora'][] = $row['Editora'];
-            $quadrinhos['original'][] = $row['Original'];
-            $quadrinhos['lido'][] = $row['Lido'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT ARTISTAS
-    $sqlArt = "SELECT DISTINCT Artistas FROM quadrinhos ORDER BY Artistas;";
-    $resultArt = mysqli_query($conn, $sqlArt);
-    $resultCheckArt = mysqli_num_rows($resultArt);
-
-    if ($resultCheckArt > 0) {
-        while ($rowArt = mysqli_fetch_assoc($resultArt)) {
-            $art[] = $rowArt['Artistas'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT EDITORA
-    $sqlEdit = "SELECT DISTINCT Editora FROM quadrinhos ORDER BY Editora;";
-    $resultEdit = mysqli_query($conn, $sqlEdit);
-    $resultCheckEdit = mysqli_num_rows($resultEdit);
-
-    if ($resultCheckEdit > 0) {
-        while ($rowEdit = mysqli_fetch_assoc($resultEdit)) {
-            $edit[] = $rowEdit['Editora'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT ORIGINAL
-    $sqlOrig = "SELECT DISTINCT Original FROM quadrinhos ORDER BY Original;";
-    $resultOrig = mysqli_query($conn, $sqlOrig);
-    $resultCheckOrig = mysqli_num_rows($resultOrig);
-
-    if ($resultCheckOrig > 0) {
-        while ($rowOrig = mysqli_fetch_assoc($resultOrig)) {
-            $orig[] = $rowOrig['Original'];
+            $titulo[] = $row['Titulo'];
+            $artistas[] = $row['Artistas'];
+            $editora[] = $row['Editora'];
+            $original[] = $row['Original'];
+            $lido[] = $row['Lido'];
         }
     }
 ?>
@@ -67,35 +37,38 @@
         <form action="db/adicionar_quadrinho.php" method="POST">
             <input type="text" name="titulo" placeholder="Título" size="45">
             <input list="artistas" name="artistas" placeholder="Artistas" size="45">
-            <datalist id="artistas">
 <?php
-    for ($c = 0; $c < count($art); $c++) {
-?>
-                <option value="<?php echo $art[$c] ?>">
-<?php
+    echo '<datalist id="artistas">';
+    $temp_unique_artistas = array_unique($artistas);
+    $unique_artistas = array_values($temp_unique_artistas);
+    sort($unique_artistas);
+    for ($c = 0; $c < count($unique_artistas); $c++) {
+            echo '<option value="' . $unique_artistas[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input list="editora" name="editora" placeholder="Editora" size="20">
-            <datalist id="editora">
 <?php
-    for ($c = 0; $c < count($edit); $c++) {
-?>
-                <option value="<?php echo $edit[$c] ?>">
-<?php
+    echo '<datalist id="editora">';
+    $temp_unique_editora = array_unique($editora);
+    $unique_editora = array_values($temp_unique_editora);
+    sort($unique_editora);
+    for ($c = 0; $c < count($unique_editora); $c++) {
+            echo '<option value="' . $unique_editora[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input list="original" name="original" placeholder="Original" size="20">
-            <datalist id="original">
 <?php
-    for ($c = 0; $c < count($orig); $c++) {
-?>
-                <option value="<?php echo $orig[$c] ?>">
-<?php
+    echo '<datalist id="original">';
+    $temp_unique_original = array_unique($original);
+    $unique_original = array_values($temp_unique_original);
+    sort($unique_original);
+    for ($c = 0; $c < count($unique_original); $c++) {
+            echo '<option value="' . $unique_original[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
@@ -109,9 +82,8 @@
             <th>Editora original</th>
         </tr>
 <?php
-    for ($c = 0; $c < count($quadrinhos['titulo']); $c++) {
-        $lido = $quadrinhos['lido'][$c];
-        if ($lido == 'S') {
+    for ($c = 0; $c < count($titulo); $c++) {
+        if ($lido[$c] == 'S') {
             $corFundo = 'style="background-color: #66ff33"';
             $lidoTexto = '';
         } else {
@@ -123,13 +95,13 @@
             <td><?php echo $c + 1 ?></td>
             <td <?php echo $corFundo ?>>
                 <form action="db/status_quadrinho.php" method="POST">
-                    <button class="lido" <?php echo $corFundo ?> type="submit" name="submit" value="<?php echo $quadrinhos['titulo'][$c] ?>"><?php echo $lidoTexto ?></button>
+                    <button class="lido" <?php echo $corFundo ?> type="submit" name="submit" value="<?php echo $titulo[$c] ?>"><?php echo $lidoTexto ?></button>
                 </form>
             </td>
-            <td class="titulo"><?php echo $quadrinhos['titulo'][$c] ?></td>
-            <td><?php echo $quadrinhos['artistas'][$c] ?></td>
-            <td><?php echo $quadrinhos['editora'][$c] ?></td>
-            <td><?php echo $quadrinhos['original'][$c] ?></td>
+            <td class="titulo"><?php echo $titulo[$c] ?></td>
+            <td><?php echo $artistas[$c] ?></td>
+            <td><?php echo $editora[$c] ?></td>
+            <td><?php echo $original[$c] ?></td>
         </tr>
 <?php
     }
