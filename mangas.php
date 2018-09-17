@@ -12,18 +12,19 @@
 <body>
 <?php
     //SELECT PREENCHIMENTO TABELA
-    $sql = "SELECT COUNT(Volume) AS Volumes, Titulo, Artistas, Editora, Original, Total FROM mangas GROUP BY Titulo;";
+    $sql = "SELECT * FROM mangas GROUP BY Titulo;";
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
     if ($resultCheck > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $mangas['volumes'][] = $row['Volumes'];
-            $mangas['titulo'][] = $row['Titulo'];
-            $mangas['artistas'][] = $row['Artistas'];
-            $mangas['editora'][] = $row['Editora'];
-            $mangas['original'][] = $row['Original'];
-            $mangas['total'][] = $row['Total'];
+            $titulo[] = $row['Titulo'];
+            $volume[] = $row['Volume'];
+            $artistas[] = $row['Artistas'];
+            $editora[] = $row['Editora'];
+            $original[] = $row['Original'];
+            $lido[] = $row['Lido'];
+            $total[] = $row['Total'];
         }
     }
     //SELECT PREENCHIMENTO VOLUMES TABELA
@@ -38,45 +39,10 @@
             $vol['lido'][] = $rowVol['Lido'];
         }
     }
-    //SELECT MAIOR TOTAL DE VOLUMES POR TITULO
-    $sqlMaxVol = "SELECT COUNT(Volume) AS Total FROM mangas GROUP BY Titulo ORDER BY Total DESC;";
-    $resultMaxVol = mysqli_query($conn, $sqlMaxVol);
-    $resultCheckMaxVol = mysqli_num_rows($resultMaxVol);
-
-    if ($resultCheckMaxVol > 0) {
-        while ($rowMaxVol = mysqli_fetch_assoc($resultMaxVol)) {
-            $maxVol[] = $rowMaxVol['Total'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT ARTISTAS
-    $sqlArt = "SELECT DISTINCT Artistas FROM mangas ORDER BY Artistas;";
-    $resultArt = mysqli_query($conn, $sqlArt);
-    $resultCheckArt = mysqli_num_rows($resultArt);
-
-    if ($resultCheckArt > 0) {
-        while ($rowArt = mysqli_fetch_assoc($resultArt)) {
-            $art[] = $rowArt['Artistas'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT EDITORA
-    $sqlEdit = "SELECT DISTINCT Editora FROM mangas ORDER BY Editora;";
-    $resultEdit = mysqli_query($conn, $sqlEdit);
-    $resultCheckEdit = mysqli_num_rows($resultEdit);
-
-    if ($resultCheckEdit > 0) {
-        while ($rowEdit = mysqli_fetch_assoc($resultEdit)) {
-            $edit[] = $rowEdit['Editora'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT ORIGINAL
-    $sqlOrig = "SELECT DISTINCT Original FROM mangas ORDER BY Original;";
-    $resultOrig = mysqli_query($conn, $sqlOrig);
-    $resultCheckOrig = mysqli_num_rows($resultOrig);
-
-    if ($resultCheckOrig > 0) {
-        while ($rowOrig = mysqli_fetch_assoc($resultOrig)) {
-            $orig[] = $rowOrig['Original'];
-        }
+    for ($c = 0; $c < count($titulo); $c++) {
+        $vol['titulo'][] = $rowVol['Titulo'];
+        $vol['volume'][] = $rowVol['Volume'];
+        $vol['lido'][] = $rowVol['Lido'];   
     }
 ?>
     <ul class="nav">
@@ -87,58 +53,61 @@
         <li><a href="quadrinhos.php">Quadrinhos</a></li>
         <li><a id="atual" href="#">Mangás</a></li>
     </ul>
+<!-- DIV MANGA NOVO -->
     <div id="addMangaNovo">
         <form action="db/adicionar_manga.php" method="POST">
             <input type="text" name="tituloNovo" placeholder="Título" size="25">
             <input type="text" name="volumeNovo" placeholder="Volume" size="3">
             <input type="text" name="total" placeholder="Total" size="3">
             <input list="artistas" name="artistas" placeholder="Artistas" size="25">
-            <datalist id="artistas">
 <?php
-    // LOOP PREENCHIMENTO ARTISTAS
-    for ($c = 0; $c < count($art); $c++) {
-?>
-                <option value="<?php echo $art[$c] ?>">
-<?php
+    echo '<datalist id="artistas">';
+    $temp_unique_artistas = array_unique($artistas);
+    $unique_artistas = array_values($temp_unique_artistas);
+    sort($unique_artistas);
+    for ($c = 0; $c < count($unique_artistas); $c++) {
+            echo '<option value="' . $unique_artistas[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input list="editora" name="editora" placeholder="Editora" size="15">
-            <datalist id="editora">
 <?php
-    // LOOP PREENCHIMENTO EDITORA
-    for ($c = 0; $c < count($edit); $c++) {
-?>
-                <option value="<?php echo $edit[$c] ?>">
-<?php
+    echo '<datalist id="editora">';
+    $temp_unique_editora = array_unique($editora);
+    $unique_editora = array_values($temp_unique_editora);
+    sort($unique_editora);
+    for ($c = 0; $c < count($unique_editora); $c++) {
+            echo '<option value="' . $unique_editora[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input list="original" name="original" placeholder="Original" size="15">
-            <datalist id="original">
 <?php
-    // LOOP PREENCHIMENTO EDITORA ORIGINAL
-    for ($c = 0; $c < count($orig); $c++) {
-?>
-                <option value="<?php echo $orig[$c] ?>">
-<?php
+    echo '<datalist id="original">';
+    $temp_unique_original = array_unique($original);
+    $unique_original = array_values($temp_unique_original);
+    sort($unique_original);
+    for ($c = 0; $c < count($unique_original); $c++) {
+            echo '<option value="' . $unique_original[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <button type="submit" name="submit">Adicionar</button>
         </div>
+<!-- DIV MANGA EXISTENTE -->
         <div id="addManga">
             <select id="tituloExistente" name="tituloExistente">
-                <option value=""  selected disabled hidden>Selecione</option>
+                <option value="" selected disabled hidden>Selecione</option>
 <?php
-    // LOOP PREENCHIMENTO TITULOS
-    for ($c = 0; $c < count($mangas['titulo']); $c++) {
-?>
-                <option value="<?php echo $mangas['titulo'][$c] ?>"><?php echo $mangas['titulo'][$c] ?></option>
-<?php
+    echo '<datalist id="titulo">';
+    $temp_unique_titulo = array_unique($titulo);
+    $unique_titulo = array_values($temp_unique_titulo);
+    sort($unique_titulo);
+    for ($c = 0; $c < count($unique_titulo); $c++) {
+            echo '<option value="' . $unique_titulo[$c] . '">';
     }
-?>
-            </select>
+    echo '</select>';
+?>              
             <input type="text" name="volumeExistente" placeholder="Volume" size="3">
             <button type="submit" name="submit">Adicionar</button>
         </form>
@@ -151,20 +120,30 @@
             <th>Editora</th>
             <th>Editora original</th>
             <th>Completo</th>
-            <th colspan="<?php echo $maxVol[0] ?>">Volumes</th>
+            <th colspan="<?php
+                         $max_titulo = array_count_values($titulo);
+                         arsort($max_titulo);
+                         /*$count_max_volumes = 0;
+                         foreach ($titulo as $tit) {
+                            if ($tit == key($max_titulo))
+                                $count_max_volumes++;
+                            }
+                            echo $count_max_volumes;*/
+                         echo $max_titulo;
+                         ?>">Volumes</th>
         </tr>
 <?php
     // CONTADOR INDEX VOLUME
     $vTotal = 0;
     // LOOP PREENCHIMENTO TABELA
-    for ($c = 0; $c < count($mangas['titulo']); $c++) {
+    for ($c = 0; $c < count($titulo); $c++) {
 ?>
         <tr>
             <td><?php echo $c + 1 ?></td>
-            <td class="titulo"><?php echo $mangas['titulo'][$c] ?></td>
-            <td><?php echo $mangas['artistas'][$c] ?></td>
-            <td><?php echo $mangas['editora'][$c] ?></td>
-            <td><?php echo $mangas['original'][$c] ?></td>
+            <td class="titulo"><?php echo $titulo[$c] ?></td>
+            <td><?php echo $artistas[$c] ?></td>
+            <td><?php echo $editora[$c] ?></td>
+            <td><?php echo $original[$c] ?></td>
             <td><meter class="completo" value="<?php echo $mangas['volumes'][$c] ?>" min="0" max="<?php echo $mangas['total'][$c] ?>"></meter></td>
 <?php
         for ($v = 0; $v < $mangas['volumes'][$c]; $v++) {
