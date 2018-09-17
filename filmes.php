@@ -11,16 +11,6 @@
 </head>
 <body>
 <?php
-    //SELECT TAMANHO TABELA
-    $sqlTamanho = "SELECT COUNT(*) AS Tamanho FROM filmes;";
-    $resultTamanho = mysqli_query($conn, $sqlTamanho);
-    $resultCheckTamanho = mysqli_num_rows($resultTamanho);
-
-    if ($resultCheckTamanho > 0) {
-        while ($rowTamanho = mysqli_fetch_assoc($resultTamanho)) {
-            $tamanho = $rowTamanho['Tamanho'];
-        }
-    }
     //SELECT PREENCHIMENTO TABELA
     $noResults = false;
     if (isset($_POST['filter'])) {
@@ -49,295 +39,35 @@
         } else {
             $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         }
-
+        $footer = false;
     } else {
         $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento;";
+        $footer = true;
     }
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
         if ($resultCheck > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
-                $filmes['colecao'][] = $row['Colecao'];
-                $filmes['titulo'][] = $row['Titulo'];
-                $filmes['ano'][] = date('Y', strtotime($row['Lancamento']));
-                $filmes['diretor'][] = $row['Diretor'];
-                $filmes['distribuidora'][] = $row['Distribuidora'];
-                $filmes['imdb'][] = $row['IMDb'];
-                $filmes['duracao'][] = $row['Duracao'];
-                $filmes['midia'][] = $row['Midia'];
-                $filmes['regiao'][] = $row['Regiao'];
-                $filmes['proporcao'][] = $row['Proporcao'];
-                $filmes['audio'][] = $row['Audio'];
-                $filmes['discos'][] = $row['Discos'];
-                $filmes['replicadora'][] = $row['Replicadora'];
-                $filmes['barcode'][] = $row['Barcode'];
-                $filmes['data'][] = date('d/m/Y', strtotime($row['Data']));
+                $colecao[] = $row['Colecao'];
+                $titulo[] = $row['Titulo'];
+                $ano[] = date('Y', strtotime($row['Lancamento']));
+                $diretor[] = $row['Diretor'];
+                $distribuidora[] = $row['Distribuidora'];
+                $imdb[] = $row['IMDb'];
+                $duracao[] = $row['Duracao'];
+                $midia[] = $row['Midia'];
+                $regiao[] = $row['Regiao'];
+                $proporcao[] = $row['Proporcao'];
+                $audio[] = $row['Audio'];
+                $discos[] = $row['Discos'];
+                $replicadora[] = $row['Replicadora'];
+                $barcode[] = $row['Barcode'];
+                $data[] = $row['Data'];
+                $loja[] = $row['Loja'];
             }
         } else {
             $noResults = true;
         }
-    //SELECT MAX ANO
-    $sqlMaxAno = "SELECT year(Lancamento), COUNT(*) FROM filmes GROUP BY year(Lancamento) ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxAno = mysqli_query($conn, $sqlMaxAno);
-    $resultCheckMaxAno = mysqli_num_rows($resultMaxAno);
-
-    if ($resultCheckMaxAno > 0) {
-        while ($rowMaxAno = mysqli_fetch_assoc($resultMaxAno)) {
-            $maxAno = $rowMaxAno['year(Lancamento)'];
-        }
-    }
-    //SELECT MAX DIRETOR
-    $sqlMaxDiretor = "SELECT Diretor, COUNT(*) FROM filmes GROUP BY Diretor ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxDiretor = mysqli_query($conn, $sqlMaxDiretor);
-    $resultCheckMaxDiretor = mysqli_num_rows($resultMaxDiretor);
-
-    if ($resultCheckMaxDiretor > 0) {
-        while ($rowMaxDiretor = mysqli_fetch_assoc($resultMaxDiretor)) {
-            $maxDiretor[0] = $rowMaxDiretor['Diretor'];
-            $maxDiretor[1] = $rowMaxDiretor['COUNT(*)'];
-        }
-    }
-    //SELECT MAX DISTRIBUIDORA
-    $sqlMaxDist = "SELECT Distribuidora, COUNT(*) FROM filmes GROUP BY Distribuidora ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxDist = mysqli_query($conn, $sqlMaxDist);
-    $resultCheckMaxDist = mysqli_num_rows($resultMaxDist);
-
-    if ($resultCheckMaxDist > 0) {
-        while ($rowMaxDist = mysqli_fetch_assoc($resultMaxDist)) {
-            $maxDist = $rowMaxDist['Distribuidora'];
-        }
-    }
-    //SELECT AVG IMDb
-    $sqlAvgImdb = "SELECT ROUND(AVG(IMDb), 1) AS 'AVG(IMDb)' FROM filmes;";
-    $resultAvgImdb = mysqli_query($conn, $sqlAvgImdb);
-    $resultCheckAvgImdb = mysqli_num_rows($resultAvgImdb);
-
-    if ($resultCheckAvgImdb > 0) {
-        while ($rowAvgImdb = mysqli_fetch_assoc($resultAvgImdb)) {
-            $avgImdb = $rowAvgImdb['AVG(IMDb)'];
-        }
-    }
-    //SELECT SUM DURACAO
-    $sqlSumDuracao = "SELECT SUM(Duracao) FROM filmes;";
-    $resultSumDuracao = mysqli_query($conn, $sqlSumDuracao);
-    $resultCheckSumDuracao = mysqli_num_rows($resultSumDuracao);
-
-    if ($resultCheckSumDuracao > 0) {
-        while ($rowSumDuracao = mysqli_fetch_assoc($resultSumDuracao)) {
-            $sumDuracao = $rowSumDuracao['SUM(Duracao)'];
-        }
-    }
-    //SELECT MAX MIDIA
-    $sqlMaxMidia = "SELECT Midia, COUNT(*) FROM filmes GROUP BY Midia ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxMidia = mysqli_query($conn, $sqlMaxMidia);
-    $resultCheckMaxMidia = mysqli_num_rows($resultMaxMidia);
-
-    if ($resultCheckMaxMidia > 0) {
-        while ($rowMaxMidia = mysqli_fetch_assoc($resultMaxMidia)) {
-            $maxMidia = $rowMaxMidia['Midia'];
-        }
-    }
-    //SELECT MAX REGIAO
-    $sqlMaxRegiao = "SELECT Regiao, COUNT(*) FROM filmes GROUP BY Regiao ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxRegiao = mysqli_query($conn, $sqlMaxRegiao);
-    $resultCheckMaxRegiao = mysqli_num_rows($resultMaxRegiao);
-
-    if ($resultCheckMaxRegiao > 0) {
-        while ($rowMaxRegiao = mysqli_fetch_assoc($resultMaxRegiao)) {
-            $maxRegiao = $rowMaxRegiao['Regiao'];
-        }
-    }
-    //SELECT MAX PROPORCAO
-    $sqlMaxProp = "SELECT Proporcao, COUNT(*) FROM filmes GROUP BY Proporcao ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxProp = mysqli_query($conn, $sqlMaxProp);
-    $resultCheckMaxProp = mysqli_num_rows($resultMaxProp);
-
-    if ($resultCheckMaxProp > 0) {
-        while ($rowMaxProp = mysqli_fetch_assoc($resultMaxProp)) {
-            $maxProp = $rowMaxProp['Proporcao'];
-        }
-    }
-    //SELECT MAX AUDIO
-    $sqlMaxAudio = "SELECT Audio, COUNT(*) FROM filmes GROUP BY Audio ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxAudio = mysqli_query($conn, $sqlMaxAudio);
-    $resultCheckMaxAudio = mysqli_num_rows($resultMaxAudio);
-
-    if ($resultCheckMaxAudio > 0) {
-        while ($rowMaxAudio = mysqli_fetch_assoc($resultMaxAudio)) {
-            $maxAudio = $rowMaxAudio['Audio'];
-        }
-    }
-    //SELECT MAX DISCOS
-    $sqlMaxDiscos = "SELECT Discos, COUNT(*) FROM filmes GROUP BY Discos ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxDiscos = mysqli_query($conn, $sqlMaxDiscos);
-    $resultCheckMaxDiscos = mysqli_num_rows($resultMaxDiscos);
-
-    if ($resultCheckMaxDiscos > 0) {
-        while ($rowMaxDiscos = mysqli_fetch_assoc($resultMaxDiscos)) {
-            $maxDiscos = $rowMaxDiscos['Discos'];
-        }
-    }
-    //SELECT MAX REPLICADORA
-    $sqlMaxRepl = "SELECT Replicadora, COUNT(*) FROM filmes GROUP BY Replicadora ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxRepl = mysqli_query($conn, $sqlMaxRepl);
-    $resultCheckMaxRepl = mysqli_num_rows($resultMaxRepl);
-
-    if ($resultCheckMaxRepl > 0) {
-        while ($rowMaxRepl = mysqli_fetch_assoc($resultMaxRepl)) {
-            $maxRepl = $rowMaxRepl['Replicadora'];
-        }
-    }
-    //SELECT MAX BARCODE
-    $sqlMaxBarcode = "SELECT Barcode, COUNT(*) FROM filmes GROUP BY Barcode ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxBarcode = mysqli_query($conn, $sqlMaxBarcode);
-    $resultCheckMaxBarcode = mysqli_num_rows($resultMaxBarcode);
-
-    if ($resultCheckMaxBarcode > 0) {
-        while ($rowMaxBarcode = mysqli_fetch_assoc($resultMaxBarcode)) {
-            $maxBarcode = $rowMaxBarcode['Barcode'];
-        }
-    }
-    //SELECT MAX DATA
-    $sqlMaxData = "SELECT Data, COUNT(*) FROM filmes GROUP BY CONCAT(month(Data), year(Data)) ORDER BY COUNT(*) DESC LIMIT 1;";
-    $resultMaxData = mysqli_query($conn, $sqlMaxData);
-    $resultCheckMaxData = mysqli_num_rows($resultMaxData);
-
-    if ($resultCheckMaxData > 0) {
-        while ($rowMaxData = mysqli_fetch_assoc($resultMaxData)) {
-            $maxData[0] = date('m/Y', strtotime($rowMaxData['Data']));
-            $maxData[1] = $rowMaxData['COUNT(*)'];
-        }
-    }
-    //SELECT QUANTIDADE FILMES
-    $sqlQtdFilmes = "SELECT COUNT(DISTINCT Titulo) FROM filmes;";
-    $resultQtdFilmes = mysqli_query($conn, $sqlQtdFilmes);
-    $resultCheckQtdFilmes = mysqli_num_rows($resultQtdFilmes);
-
-    if ($resultCheckQtdFilmes > 0) {
-        while ($rowQtdFilmes = mysqli_fetch_assoc($resultQtdFilmes)) {
-            $qtdFilmes = $rowQtdFilmes['COUNT(DISTINCT Titulo)'];
-        }
-    }
-    //SELECT QUANTIDADE BLURAYS
-    $sqlQtdBluray = "SELECT COUNT(Midia) FROM filmes WHERE Midia = 'Blu-ray' OR Midia = 'Blu-ray 3D';";
-    $resultQtdBluray = mysqli_query($conn, $sqlQtdBluray);
-    $resultCheckQtdBluray = mysqli_num_rows($resultQtdBluray);
-
-    if ($resultCheckQtdBluray > 0) {
-        while ($rowQtdBluray = mysqli_fetch_assoc($resultQtdBluray)) {
-            $qtdBluray = $rowQtdBluray['COUNT(Midia)'];
-        }
-    }
-    //SELECT QUANTIDADE DVDS
-    $sqlQtdDvd = "SELECT COUNT(Midia) FROM filmes WHERE Midia = 'DVD';";
-    $resultQtdDvd = mysqli_query($conn, $sqlQtdDvd);
-    $resultCheckQtdDvd = mysqli_num_rows($resultQtdDvd);
-
-    if ($resultCheckQtdDvd > 0) {
-        while ($rowQtdDvd = mysqli_fetch_assoc($resultQtdDvd)) {
-            $qtdDvd = $rowQtdDvd['COUNT(Midia)'];
-        }
-    }
-    //SELECT DISTINCT BARCODES BLURAY
-    $sqlEstBluray = "SELECT COUNT(DISTINCT Barcode) FROM filmes WHERE Midia = 'Blu-ray' OR 'Blu-ray 3D';";
-    $resultEstBluray = mysqli_query($conn, $sqlEstBluray);
-    $resultCheckEstBluray = mysqli_num_rows($resultEstBluray);
-
-    if ($resultCheckEstBluray > 0) {
-        while ($rowEstBluray = mysqli_fetch_assoc($resultEstBluray)) {
-            $estBluray = $rowEstBluray['COUNT(DISTINCT Barcode)'];
-        }
-    }
-    //SELECT DISTINCT BARCODES DVD
-    $sqlEstDvd = "SELECT COUNT(DISTINCT Barcode) FROM filmes WHERE Midia = 'DVD';";
-    $resultEstDvd = mysqli_query($conn, $sqlEstDvd);
-    $resultCheckEstDvd = mysqli_num_rows($resultEstDvd);
-
-    if ($resultCheckEstDvd > 0) {
-        while ($rowEstDvd = mysqli_fetch_assoc($resultEstDvd)) {
-            $estDvd = $rowEstDvd['COUNT(DISTINCT Barcode)'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT COLECAO
-    $sqlCole = "SELECT DISTINCT Colecao FROM filmes WHERE Colecao IS NOT NULL ORDER BY Colecao;";
-    $resultCole = mysqli_query($conn, $sqlCole);
-    $resultCheckCole = mysqli_num_rows($resultCole);
-
-    if ($resultCheckCole > 0) {
-        while ($rowCole = mysqli_fetch_assoc($resultCole)) {
-            $cole[] = $rowCole['Colecao'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT DIRETOR
-    $sqlDire = "SELECT DISTINCT Diretor FROM filmes ORDER BY Diretor;";
-    $resultDire = mysqli_query($conn, $sqlDire);
-    $resultCheckDire = mysqli_num_rows($resultDire);
-
-    if ($resultCheckDire > 0) {
-        while ($rowDire = mysqli_fetch_assoc($resultDire)) {
-            $dire[] = $rowDire['Diretor'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT DISTRIBUIDORA
-    $sqlDist = "SELECT DISTINCT Distribuidora FROM filmes ORDER BY Distribuidora;";
-    $resultDist = mysqli_query($conn, $sqlDist);
-    $resultCheckDist = mysqli_num_rows($resultDist);
-
-    if ($resultCheckDist > 0) {
-        while ($rowDist = mysqli_fetch_assoc($resultDist)) {
-            $dist[] = $rowDist['Distribuidora'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT MIDIA
-    $sqlMidia = "SELECT DISTINCT Midia FROM filmes ORDER BY Midia;";
-    $resultMidia = mysqli_query($conn, $sqlMidia);
-    $resultCheckMidia = mysqli_num_rows($resultMidia);
-
-    if ($resultCheckMidia > 0) {
-        while ($rowMidia = mysqli_fetch_assoc($resultMidia)) {
-            $midia[] = $rowMidia['Midia'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT PROPORCAO
-    $sqlProp = "SELECT DISTINCT Proporcao FROM filmes ORDER BY Proporcao;";
-    $resultProp = mysqli_query($conn, $sqlProp);
-    $resultCheckProp = mysqli_num_rows($resultProp);
-
-    if ($resultCheckProp > 0) {
-        while ($rowProp = mysqli_fetch_assoc($resultProp)) {
-            $prop[] = $rowProp['Proporcao'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT AUDIO
-    $sqlAudio = "SELECT DISTINCT Audio FROM filmes ORDER BY Audio;";
-    $resultAudio = mysqli_query($conn, $sqlAudio);
-    $resultCheckAudio = mysqli_num_rows($resultAudio);
-
-    if ($resultCheckAudio > 0) {
-        while ($rowAudio = mysqli_fetch_assoc($resultAudio)) {
-            $audio[] = $rowAudio['Audio'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT REPLICADORA
-    $sqlRepl = "SELECT DISTINCT Replicadora FROM filmes ORDER BY Replicadora;";
-    $resultRepl = mysqli_query($conn, $sqlRepl);
-    $resultCheckRepl = mysqli_num_rows($resultRepl);
-
-    if ($resultCheckRepl > 0) {
-        while ($rowRepl = mysqli_fetch_assoc($resultRepl)) {
-            $repl[] = $rowRepl['Replicadora'];
-        }
-    }
-    //SELECT PREENCHIMENTO INPUT LOJA
-    $sqlLoja = "SELECT DISTINCT Loja FROM filmes ORDER BY Loja;";
-    $resultLoja = mysqli_query($conn, $sqlLoja);
-    $resultCheckLoja = mysqli_num_rows($resultLoja);
-
-    if ($resultCheckLoja > 0) {
-        while ($rowLoja = mysqli_fetch_assoc($resultLoja)) {
-            $loja[] = $rowLoja['Loja'];
-        }
-    }
 ?>
     <ul class="nav">
         <li><button id="novo">Novo</button></li>
@@ -376,103 +106,115 @@
     </ul>
     <img id="posterImg" border="5" src="">
     <img id="barcodeImg" border="5" src="">
+    
+    <!-- INPUTS -->
     <div id="addFilme">
         <form action="db/adicionar_filme.php" method="POST">
             <input list="colecao" name="colecao" placeholder="Coleção" size="20">
-            <datalist id="colecao">
 <?php
-    for ($c = 0; $c < count($cole); $c++) {
-?>
-                <option value="<?php echo $cole[$c] ?>">
-<?php
+    echo '<datalist id="colecao">';
+    $temp_unique_colecao = array_unique($colecao);
+    $unique_colecao = array_values($temp_unique_colecao);
+    sort($unique_colecao);
+    for ($c = 0; $c < count($unique_colecao); $c++) {
+            echo '<option value="' . $unique_colecao[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input type="text" name="titulo" placeholder="Título" size="24">
             <label>Lançamento <input type="date" name="lancamento"></label>
             <input list="diretor" name="diretor" placeholder="Diretor" size="25">
-            <datalist id="diretor">
 <?php
-    for ($c = 0; $c < count($dire); $c++) {
-?>
-                <option value="<?php echo $dire[$c] ?>">
-<?php
+    echo '<datalist id="diretor">';
+    $temp_unique_diretor = array_unique($diretor);
+    $unique_diretor = array_values($temp_unique_diretor);
+    sort($unique_diretor);
+    for ($c = 0; $c < count($unique_diretor); $c++) {
+            echo '<option value="' . $unique_diretor[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="15">
-            <datalist id="distribuidora">
 <?php
-    for ($c = 0; $c < count($dist); $c++) {
-?>
-                <option value="<?php echo $dist[$c] ?>">
-<?php
+    echo '<datalist id="distribuidora">';
+    $temp_unique_distribuidora = array_unique($distribuidora);
+    $unique_distribuidora = array_values($temp_unique_distribuidora);
+    sort($unique_distribuidora);
+    for ($c = 0; $c < count($unique_distribuidora); $c++) {
+            echo '<option value="' . $unique_distribuidora[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
             <input type="text" name="duracao" placeholder="Duração" size="5">
             <input list="midia" name="midia" placeholder="Mídia" size="10">
-            <datalist id="midia">
 <?php
-    for ($c = 0; $c < count($midia); $c++) {
-?>
-                <option value="<?php echo $midia[$c] ?>">
-<?php
+    echo '<datalist id="midia">';
+    $temp_unique_midia = array_unique($midia);
+    $unique_midia = array_values($temp_unique_midia);
+    sort($unique_midia);
+    for ($c = 0; $c < count($unique_midia); $c++) {
+            echo '<option value="' . $unique_midia[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <label>Região 
             <label><input type="checkbox" name="regiao[]" value="A">A</label>
             <label><input type="checkbox" name="regiao[]" value="B">B</label>
             <label><input type="checkbox" name="regiao[]" value="C">C</label>
             </label>
             <input list="proporcao" name="proporcao" placeholder="Proporção" size="20">
-            <datalist id="proporcao">
 <?php
-    for ($c = 0; $c < count($prop); $c++) {
-?>
-                <option value="<?php echo $prop[$c] ?>">
-<?php
+    echo '<datalist id="proporcao">';
+    $temp_unique_proporcao = array_unique($proporcao);
+    $unique_proporcao = array_values($temp_unique_proporcao);
+    sort($unique_proporcao);
+    for ($c = 0; $c < count($unique_proporcao); $c++) {
+            echo '<option value="' . $unique_proporcao[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input list="audio" name="audio" placeholder="Áudio" size="15">
-            <datalist id="audio">
 <?php
-    for ($c = 0; $c < count($audio); $c++) {
-?>
-                <option value="<?php echo $audio[$c] ?>">
-<?php
+    echo '<datalist id="audio">';
+    $temp_unique_audio = array_unique($audio);
+    $unique_audio = array_values($temp_unique_audio);
+    sort($unique_audio);
+    for ($c = 0; $c < count($unique_audio); $c++) {
+            echo '<option value="' . $unique_audio[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input type="text" name="discos" placeholder="Discos" size="4">
             <input list="replicadora" name="replicadora" placeholder="Replicadora" size="15">
-            <datalist id="replicadora">
 <?php
-    for ($c = 0; $c < count($repl); $c++) {
-?>
-                <option value="<?php echo $repl[$c] ?>">
-<?php
+    echo '<datalist id="replicadora">';
+    $temp_unique_replicadora = array_unique($replicadora);
+    $unique_replicadora = array_values($temp_unique_replicadora);
+    sort($unique_replicadora);
+    for ($c = 0; $c < count($unique_replicadora); $c++) {
+            echo '<option value="' . $unique_replicadora[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
             <input id="barcodeForm" type="text" name="barcode" placeholder="Código de Barras" size="15" maxlength="13">
             <input list="loja" name="loja" placeholder="Loja" size="15">
-            <label>Data <input type="date" name="data"></label>
-            <datalist id="loja">
 <?php
-    for ($c = 0; $c < count($loja); $c++) {
-?>
-                <option value="<?php echo $loja[$c] ?>">
-<?php
+    echo '<datalist id="loja">';
+    $temp_unique_loja = array_unique($loja);
+    $unique_loja = array_values($temp_unique_loja);
+    sort($unique_loja);
+    for ($c = 0; $c < count($unique_loja); $c++) {
+            echo '<option value="' . $unique_loja[$c] . '">';
     }
+    echo '</datalist>';
 ?>
-            </datalist>
-            <button id="submit" type="submit" name="submit">+</button>
+            <label>Data <input type="date" name="data"></label>
+            <button id="submit" type="submit" name="submit">Add</button>
         </form>
     </div>
+    <!-- END OF INPUTS -->
+
     <table id="tblFilmes">
         <tr>
             <th>Nº</th>
@@ -494,10 +236,10 @@
 <?php
     if (!$noResults) {
         $ccount = 0;
-        for ($c = 0; $c < count($filmes['titulo']); $c++) {
-            $barcode_year = $filmes['barcode'][$c] . "_" . $filmes['ano'][$c];
-            $imdb = $filmes['imdb'][$c] * 10;
-            if ($filmes['colecao'][$c] != "" && $ccount == 0 && !isset($_POST['filter'])) {
+        for ($c = 0; $c < count($titulo); $c++) {
+            $barcode_year = $barcode[$c] . '_' . $ano[$c];
+            $imdb_percent = $imdb[$c] * 10;
+            if ($colecao[$c] != '' && $ccount == 0 && !isset($_POST['filter'])) {
                 $ccount += 1;
 ?>
                 <tr><th colspan="15">Coleções</th></tr>
@@ -506,48 +248,113 @@
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
-                <td id="<?php echo $barcode_year ?>" class="titulo"><?php echo $filmes['titulo'][$c] ?></td>
-                <td><?php echo $filmes['ano'][$c] ?></td>
-                <td><?php echo $filmes['diretor'][$c] ?></td>
-                <td><?php echo $filmes['distribuidora'][$c] ?></td>
-                <td><div class="imdbdiv" style="width: <?php echo $imdb ?>%"><?php echo $filmes['imdb'][$c] ?></div></td>
-                <td><?php echo $filmes['duracao'][$c] ?> min.</td>
-                <td><?php echo $filmes['midia'][$c] ?></td>
-                <td><?php echo $filmes['regiao'][$c] ?></td>
-                <td><?php echo $filmes['proporcao'][$c] ?></td>
-                <td><?php echo $filmes['audio'][$c] ?></td>
-                <td><?php echo $filmes['discos'][$c] ?></td>
-                <td><?php echo $filmes['replicadora'][$c] ?></td>
-                <td class="barcode"><?php echo $filmes['barcode'][$c] ?></td>
-                <td><?php echo $filmes['data'][$c] ?></td>
+                <td id="<?php echo $barcode_year ?>" class="titulo"><?php echo $titulo[$c] ?></td>
+                <td><?php echo $ano[$c] ?></td>
+                <td><?php echo $diretor[$c] ?></td>
+                <td><?php echo $distribuidora[$c] ?></td>
+                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><?php echo $imdb[$c] ?></div></td>
+                <td><?php echo $duracao[$c] ?> min.</td>
+                <td><?php echo $midia[$c] ?></td>
+                <td><?php echo $regiao[$c] ?></td>
+                <td><?php echo $proporcao[$c] ?></td>
+                <td><?php echo $audio[$c] ?></td>
+                <td><?php echo $discos[$c] ?></td>
+                <td><?php echo $replicadora[$c] ?></td>
+                <td class="barcode"><?php echo $barcode[$c] ?></td>
+                <td><?php echo date('d/m/Y', strtotime($data[$c])) ?></td>
             </tr>
 <?php
-            if ($c > 0) {
-                $coleAnt = $filmes['colecao'][($c - 1)];
-                $direAnt = $filmes['diretor'][($c - 1)];
-            }
         }
-            if (count($filmes['titulo']) == $tamanho) {
+        if ($footer) {
 ?>
             <tr id="footer">
-                <td colspan="2"><?php echo 'Filmes: ' . $qtdFilmes . ' | Blu-rays: ' . $qtdBluray . ' (' . $estBluray . ')' . ' | DVDs: ' . $qtdDvd . ' (' . $estDvd . ')' ?></td>
-                <td><?php echo $maxAno ?></td>
-                <td><?php echo $maxDiretor[0] . ' (' . $maxDiretor[1] . ')' ?></td>
-                <td><?php echo $maxDist ?></td>
-                <td><div id="imdbdivfooter" style="width: <?php echo $avgImdb * 10 ?>%"><?php echo $avgImdb ?></div></td>
-                <td>~<?php echo round($sumDuracao / 60, 0) ?>h</td>
-                <td><?php echo $maxMidia ?></td>
-                <td><?php echo $maxRegiao ?></td>
-                <td><?php echo $maxProp ?></td>
-                <td><?php echo $maxAudio ?></td>
-                <td><?php echo $maxDiscos ?></td>
-                <td><?php echo $maxRepl ?></td>
-                <td><?php echo $maxBarcode ?></td>
-                <td><?php echo $maxData[0] . ' (' . $maxData[1] . ')' ?></td>
+                <td colspan="2"><?php
+                for ($c = 0; $c < count($midia); $c++) {
+                    if ($midia[$c] == 'Blu-ray') {
+                        $barcodes_bluray[] = $barcode[$c];
+                    } else {
+                        $barcodes_dvd[] = $barcode[$c];
+                    }
+                }
+                $unique_barcodes_bluray = array_unique($barcodes_bluray);
+                $unique_barcodes_dvd = array_unique($barcodes_dvd);
+                echo 'Filmes: ' . count($titulo) . ' | Blu-rays: ' . count($barcodes_bluray) . ' (' . count($unique_barcodes_bluray) . ')' . ' | DVDs: ' . count($barcodes_dvd) . ' (' . count($unique_barcodes_dvd) . ')'
+                ?></td>
+                <td><?php 
+                    $max_ano = array_count_values($ano);
+                    arsort($max_ano);
+                    echo key($max_ano);
+                ?></td>
+                <td><?php 
+                    $max_diretor = array_count_values($diretor);
+                    arsort($max_diretor);
+                    $count_max_diretor = 0;
+                    foreach ($diretor as $dir) {
+                        if ($dir == key($max_diretor))
+                        $count_max_diretor++;
+                    }
+                    echo key($max_diretor) . ' (' . $count_max_diretor . ')';
+                ?></td>
+                <td><?php 
+                    $max_distribuidora = array_count_values($distribuidora);
+                    arsort($max_distribuidora);
+                    echo key($max_distribuidora);
+                ?></td>
+                <td><?php 
+                    $avg_imdb = round(array_sum($imdb) / count($imdb), 1);
+                    $avg_imdb_percent = $avg_imdb * 10;
+                    echo '<div id="imdbdivfooter" style="width:' . $avg_imdb_percent . '%">'. $avg_imdb . '</div>';
+                ?></td>
+                <td>~<?php echo round(array_sum($duracao) / 60, 0) ?>h</td>
+                <td><?php 
+                    $max_midia = array_count_values($midia);
+                    arsort($max_midia);
+                    echo key($max_midia);
+                ?></td>
+                <td><?php 
+                    $max_regiao = array_count_values($regiao);
+                    arsort($max_regiao);
+                    echo key($max_regiao);
+                ?></td>
+                <td><?php 
+                    $max_proporcao = array_count_values($proporcao);
+                    arsort($max_proporcao);
+                    echo key($max_proporcao);
+                ?></td>
+                <td><?php 
+                    $max_audio = array_count_values($audio);
+                    arsort($max_audio);
+                    echo key($max_audio);
+                ?></td>
+                <td><?php 
+                    $max_discos = array_count_values($discos);
+                    arsort($max_discos);
+                    echo key($max_discos);
+                ?></td>
+                <td><?php 
+                    $max_replicadora = array_count_values($replicadora);
+                    arsort($max_replicadora);
+                    echo key($max_replicadora);
+                ?></td>
+                <td><?php 
+                    $max_barcode = array_count_values($barcode);
+                    arsort($max_barcode);
+                    echo key($max_barcode);
+                ?></td>
+                <td><?php 
+                    $max_data = array_count_values($data);
+                    arsort($max_data);
+                    $count_max_data = 0;
+                    foreach ($data as $dat) {
+                        if (date('m/Y', strtotime($dat)) == date('m/Y', strtotime(key($max_data))))
+                            $count_max_data++;
+                    }
+                    echo date('m/Y', strtotime(key($max_data))) . ' (' . $count_max_data . ')';
+                ?></td>
             </tr>
 <?php
-            }
-        } else {
+        }
+    } else {
 ?>
         <tr><td colspan="15"><strong>Nenhum registro encontrado!</strong></td></tr>
 <?php
