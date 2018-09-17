@@ -62,8 +62,8 @@
                 $discos[] = $row['Discos'];
                 $replicadora[] = $row['Replicadora'];
                 $barcode[] = $row['Barcode'];
-                $data[] = $row['Data'];
                 $loja[] = $row['Loja'];
+                $data[] = $row['Data'];
             }
         } else {
             $noResults = true;
