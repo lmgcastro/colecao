@@ -1,41 +1,21 @@
 <?php
     include_once "dbh.php";
 
-    $tituloExistente = $_POST['tituloExistente'];
-    $tituloNovo = $_POST['tituloNovo'];
-    $volumeExistente = $_POST['volumeExistente'];
-    $volumeNovo = $_POST['volumeNovo'];
-    
-    if (empty($tituloExistente)) {
-        $titulo = $tituloNovo;
-    } else {
-        $titulo = $tituloExistente;
-    }
-    
-    if (empty($volumeExistente)) {
-        $volume = $volumeNovo;
-    } else {
-        $volume = $volumeExistente;
-    }
+    $titulo = $_POST['titulo'];
+    $volume = $_POST['volume'];
+	
+	// SELECT DADOS NAO INFORMADOS
+	$sql = "SELECT DISTINCT Artistas, Editora, Original, Total FROM mangas WHERE Titulo = '$titulo';";
+	$result = mysqli_query($conn, $sql);
+	$resultCheck = mysqli_num_rows($result);
 
-    $total = $_POST['total'];
-    $artistas = $_POST['artistas'];
-    $editora = $_POST['editora'];
-    $original = $_POST['original'];
-
-    if ($tituloExistente != "") {
-        $sqlNovo = "SELECT DISTINCT Artistas, Editora, Original, Total FROM mangas WHERE Titulo = '$titulo';";
-        $resultNovo = mysqli_query($conn, $sqlNovo);
-        $resultCheckNovo = mysqli_num_rows($resultNovo);
-
-        if ($resultCheckNovo > 0) {
-            while ($rowNovo = mysqli_fetch_assoc($resultNovo)) {
-                $artistas = $rowNovo['Artistas'];
-                $editora = $rowNovo['Editora'];
-                $original = $rowNovo['Original'];
-                $total = $rowNovo['Total'];
-            }
-        }
+	if ($resultCheck > 0) {
+		while ($row = mysqli_fetch_assoc($result)) {
+			$artistas = $row['Artistas'];
+			$editora = $row['Editora'];
+			$original = $row['Original'];
+			$total = $row['Total'];
+		}
     }
 
     $sql = "INSERT INTO mangas VALUES ('$titulo', '$volume', '$artistas', '$editora', '$original', 'N', $total);";
