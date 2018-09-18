@@ -12,7 +12,7 @@
 <body>
 <?php
     //SELECT PREENCHIMENTO TABELA
-    $sql = "SELECT * FROM mangas GROUP BY Titulo;";
+    $sql = "SELECT * FROM mangas ORDER BY Titulo;";
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
@@ -39,11 +39,11 @@
             $vol['lido'][] = $rowVol['Lido'];
         }
     }
-    for ($c = 0; $c < count($titulo); $c++) {
+    /*for ($c = 0; $c < count($titulo); $c++) {
         $vol['titulo'][] = $rowVol['Titulo'];
         $vol['volume'][] = $rowVol['Volume'];
         $vol['lido'][] = $rowVol['Lido'];   
-    }
+    }*/
 ?>
     <ul class="nav">
         <li><button id="botaoNovo">Novo</button>
@@ -147,7 +147,7 @@
             <td><meter class="completo" value="<?php echo $mangas['volumes'][$c] ?>" min="0" max="<?php echo $mangas['total'][$c] ?>"></meter></td>
 <?php
         for ($v = 0; $v < $mangas['volumes'][$c]; $v++) {
-            $lido =  $vol['lido'][$vTotal];
+            $lido =  $vol['lido'][$vTotal]
             // LOOP COR FUNDO STATUS
             if ($lido == 'S') {
                 $corFundo = 'style="background-color: #66ff33"';

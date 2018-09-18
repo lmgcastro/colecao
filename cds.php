@@ -89,7 +89,7 @@
             <td><?php echo $selo[$c] ?></td>
             <td><?php echo $duracao[$c] ?></td>
             <td><?php echo $discos[$c] ?></td>
-            <td><?php echo $data[$c] ?></td>
+            <td><?php echo date('d/m/Y', strtotime($data[$c])) ?></td>
         </tr>
 <?php
     }
