@@ -52,8 +52,8 @@
 <!-- DIV MANGA NOVO -->
     <div id="addMangaNovo">
         <form action="db/adicionar_manga.php" method="POST">
-            <input type="text" name="tituloNovo" placeholder="Título" size="25">
-            <input type="text" name="volumeNovo" placeholder="Volume" size="3">
+            <input type="text" name="titulo" placeholder="Título" size="25">
+            <input type="text" name="volume" placeholder="Volume" size="3">
             <input type="text" name="total" placeholder="Total" size="3">
             <input list="artistas" name="artistas" placeholder="Artistas" size="25">
 <?php
@@ -92,7 +92,7 @@
         </div>
 <!-- DIV MANGA EXISTENTE -->
         <div id="addManga">
-            <select id="tituloExistente" name="tituloExistente">
+            <select id="titulo" name="titulo">
                 <option value="" selected disabled hidden>Selecione</option>
 <?php
     $temp_unique_titulo = array_unique($titulo);
@@ -103,7 +103,7 @@
     }
     echo '</select>';
 ?>              
-            <input type="text" name="volumeExistente" placeholder="Volume" size="3">
+            <input type="text" name="volume" placeholder="Volume" size="3">
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
@@ -160,7 +160,7 @@
             <td <?php echo $corFundo ?>>
                 <form action="db/status_manga.php" method="POST">
 <?php 
-    echo '<button class="lido"' . $corFundo . 'type="submit" name="lido" value="' . $unique['titulo'][$c] . "#" . $volume[$vTotal] . '">' . $zero . $volume[$vTotal] . '</button>'           
+    echo '<button class="lido"' . $corFundo . 'type="submit" name="lido" value="' . $unique['titulo'][$c] . '#' . $volume[$vTotal] . '">' . $zero . $volume[$vTotal] . '</button>'           
 ?>
                 </form>
             </td>
