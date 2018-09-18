@@ -126,7 +126,8 @@
 			$count_max_titulo++;
 	}
 	echo $count_max_titulo;
-?>">Volumes</th>
+?>
+">Volumes</th>
         </tr>
 <?php
     // CONTADOR INDEX VOLUME
@@ -158,7 +159,9 @@
 ?>
             <td <?php echo $corFundo ?>>
                 <form action="db/status_manga.php" method="POST">
-                    <button class="lido" <?php echo $corFundo ?> type="submit" name="lido" value="<?php echo $unique['titulo'][$c] . "#" . $volume[$vTotal] ?>"><?php echo $zero . $volume[$vTotal] ?></button>
+<?php 
+    echo '<button class="lido"' . $corFundo . 'type="submit" name="lido" value="' . $unique['titulo'][$c] . "#" . $volume[$vTotal] . '">' . $zero . $volume[$vTotal] . '</button>'           
+?>
                 </form>
             </td>
 <?php
