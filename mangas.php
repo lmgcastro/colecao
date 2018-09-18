@@ -89,10 +89,12 @@
     echo '</datalist>';
 ?>
             <button type="submit" name="submit">Adicionar</button>
-        </div>
+	</form>
+    </div>
 <!-- DIV MANGA EXISTENTE -->
-        <div id="addManga">
-            <select id="titulo" name="titulo">
+    <div id="addManga">
+	<form action="db/adicionar_manga.php" method="POST">
+	    <select id="titulo" name="titulo">
                 <option value="" selected disabled hidden>Selecione</option>
 <?php
     $temp_unique_titulo = array_unique($titulo);
@@ -107,7 +109,6 @@
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
-	
     <table id="tblMangas">
         <tr>
             <th>Nº</th>
