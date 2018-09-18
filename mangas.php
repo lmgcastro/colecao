@@ -6,13 +6,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Filmes</title>
+    <title>Mangás</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php
     //SELECT PREENCHIMENTO TABELA
-    $sql = "SELECT * FROM mangas ORDER BY Titulo;";
+    $sql = "SELECT * FROM mangas ORDER BY Titulo, Volume;";
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
@@ -27,23 +27,19 @@
             $total[] = $row['Total'];
         }
     }
-    //SELECT PREENCHIMENTO VOLUMES TABELA
-    $sqlVol = "SELECT Titulo, Volume, Lido FROM mangas ORDER BY Titulo, Volume;";
-    $resultVol = mysqli_query($conn, $sqlVol);
-    $resultCheckVol = mysqli_num_rows($resultVol);
-
-    if ($resultCheckVol > 0) {
-        while ($rowVol = mysqli_fetch_assoc($resultVol)) {
-            $vol['titulo'][] = $rowVol['Titulo'];
-            $vol['volume'][] = $rowVol['Volume'];
-            $vol['lido'][] = $rowVol['Lido'];
-        }
+	$volumes_titulo = array_count_values($titulo);
+	$titulo_anterior = '';
+	for ($c = 0; $c < count($titulo); $c++) {
+		if ($titulo[$c] != $titulo_anterior) {
+			$unique['titulo'][] = $titulo[$c];
+			$unique['artistas'][] = $artistas[$c];
+			$unique['editora'][] = $editora[$c];
+			$unique['original'][] = $original[$c];
+			$unique['total'][] = $total[$c];
+			$unique['volumes'][] = $volumes_titulo[$titulo[$c]];
+		}
+        $titulo_anterior = $titulo[$c];
     }
-    /*for ($c = 0; $c < count($titulo); $c++) {
-        $vol['titulo'][] = $rowVol['Titulo'];
-        $vol['volume'][] = $rowVol['Volume'];
-        $vol['lido'][] = $rowVol['Lido'];   
-    }*/
 ?>
     <ul class="nav">
         <li><button id="botaoNovo">Novo</button>
@@ -99,12 +95,11 @@
             <select id="tituloExistente" name="tituloExistente">
                 <option value="" selected disabled hidden>Selecione</option>
 <?php
-    echo '<datalist id="titulo">';
     $temp_unique_titulo = array_unique($titulo);
     $unique_titulo = array_values($temp_unique_titulo);
     sort($unique_titulo);
     for ($c = 0; $c < count($unique_titulo); $c++) {
-            echo '<option value="' . $unique_titulo[$c] . '">';
+            echo '<option value="' . $unique_titulo[$c] . '">' . $unique_titulo[$c] . '</option>';
     }
     echo '</select>';
 ?>              
@@ -112,6 +107,7 @@
             <button type="submit" name="submit">Adicionar</button>
         </form>
     </div>
+	
     <table id="tblMangas">
         <tr>
             <th>Nº</th>
@@ -120,42 +116,41 @@
             <th>Editora</th>
             <th>Editora original</th>
             <th>Completo</th>
-            <th colspan="<?php
-                         $max_titulo = array_count_values($titulo);
-                         arsort($max_titulo);
-                         /*$count_max_volumes = 0;
-                         foreach ($titulo as $tit) {
-                            if ($tit == key($max_titulo))
-                                $count_max_volumes++;
-                            }
-                            echo $count_max_volumes;*/
-                         echo $max_titulo;
-                         ?>">Volumes</th>
+            <th colspan="
+<?php
+	$max_titulo = array_count_values($titulo);
+	arsort($max_titulo);
+	$count_max_titulo = 0;
+	foreach ($titulo as $tit) {
+		if ($tit == key($max_titulo))
+			$count_max_titulo++;
+	}
+	echo $count_max_titulo;
+?>">Volumes</th>
         </tr>
 <?php
     // CONTADOR INDEX VOLUME
     $vTotal = 0;
     // LOOP PREENCHIMENTO TABELA
-    for ($c = 0; $c < count($titulo); $c++) {
+    for ($c = 0; $c < count($unique['titulo']); $c++) {
 ?>
         <tr>
             <td><?php echo $c + 1 ?></td>
-            <td class="titulo"><?php echo $titulo[$c] ?></td>
-            <td><?php echo $artistas[$c] ?></td>
-            <td><?php echo $editora[$c] ?></td>
-            <td><?php echo $original[$c] ?></td>
-            <td><meter class="completo" value="<?php echo $mangas['volumes'][$c] ?>" min="0" max="<?php echo $mangas['total'][$c] ?>"></meter></td>
+            <td class="titulo"><?php echo $unique['titulo'][$c] ?></td>
+            <td><?php echo $unique['artistas'][$c] ?></td>
+            <td><?php echo $unique['editora'][$c] ?></td>
+            <td><?php echo $unique['original'][$c] ?></td>
+            <td><meter class="completo" value="<?php echo $unique['volumes'][$c] ?>" min="0" max="<?php echo $unique['total'][$c] ?>"></meter></td>
 <?php
-        for ($v = 0; $v < $mangas['volumes'][$c]; $v++) {
-            $lido =  $vol['lido'][$vTotal]
+        for ($v = 0; $v < $unique['volumes'][$c]; $v++) {
             // LOOP COR FUNDO STATUS
-            if ($lido == 'S') {
+            if ($lido[$vTotal] == 'S') {
                 $corFundo = 'style="background-color: #66ff33"';
             } else {
                 $corFundo = 'style="background-color: #ff3333"';
             }
             // LOOP ADICIONAR ZERO UM DÍGITO
-            if ($vol['volume'][$vTotal] >= 0 && $vol['volume'][$vTotal] < 10) {
+            if ($volume[$vTotal] < 10) {
                 $zero = '0';
             } else {
                 $zero = '';
@@ -163,7 +158,7 @@
 ?>
             <td <?php echo $corFundo ?>>
                 <form action="db/status_manga.php" method="POST">
-                    <button class="lido" <?php echo $corFundo ?> type="submit" name="lido" value="<?php echo $mangas['titulo'][$c] . "#" . $vol['volume'][$vTotal] ?>"><?php echo $zero . $vol['volume'][$vTotal] ?></button>
+                    <button class="lido" <?php echo $corFundo ?> type="submit" name="lido" value="<?php echo $unique['titulo'][$c] . "#" . $volume[$vTotal] ?>"><?php echo $zero . $volume[$vTotal] ?></button>
                 </form>
             </td>
 <?php
