@@ -49,9 +49,27 @@
         <li><a href="quadrinhos.php">Quadrinhos</a></li>
         <li><a id="atual" href="#">Mangás</a></li>
     </ul>
+<!-- DIV MANGA EXISTENTE -->
+    <div id="addManga">
+	<form action="db/adicionar_manga.php" method="POST">
+	    <select id="titulo" name="titulo">
+                <option value="" selected disabled hidden>Selecione</option>
+<?php
+    $temp_unique_titulo = array_unique($titulo);
+    $unique_titulo = array_values($temp_unique_titulo);
+    sort($unique_titulo);
+    for ($c = 0; $c < count($unique_titulo); $c++) {
+            echo '<option value="' . $unique_titulo[$c] . '">' . $unique_titulo[$c] . '</option>';
+    }
+    echo '</select>';
+?>              
+            <input type="text" name="volume" placeholder="Volume" size="3">
+            <button type="submit" name="submit">Adicionar</button>
+        </form>
+    </div>
 <!-- DIV MANGA NOVO -->
     <div id="addMangaNovo">
-        <form action="db/adicionar_manga.php" method="POST">
+        <form action="db/adicionar_manga_novo.php" method="POST">
             <input type="text" name="titulo" placeholder="Título" size="25">
             <input type="text" name="volume" placeholder="Volume" size="3">
             <input type="text" name="total" placeholder="Total" size="3">
@@ -90,24 +108,6 @@
 ?>
             <button type="submit" name="submit">Adicionar</button>
 	</form>
-    </div>
-<!-- DIV MANGA EXISTENTE -->
-    <div id="addManga">
-	<form action="db/adicionar_manga.php" method="POST">
-	    <select id="titulo" name="titulo">
-                <option value="" selected disabled hidden>Selecione</option>
-<?php
-    $temp_unique_titulo = array_unique($titulo);
-    $unique_titulo = array_values($temp_unique_titulo);
-    sort($unique_titulo);
-    for ($c = 0; $c < count($unique_titulo); $c++) {
-            echo '<option value="' . $unique_titulo[$c] . '">' . $unique_titulo[$c] . '</option>';
-    }
-    echo '</select>';
-?>              
-            <input type="text" name="volume" placeholder="Volume" size="3">
-            <button type="submit" name="submit">Adicionar</button>
-        </form>
     </div>
     <table id="tblMangas">
         <tr>
