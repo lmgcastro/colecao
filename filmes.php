@@ -281,12 +281,7 @@
                 <td><?php 
                     $max_diretor = array_count_values($diretor);
                     arsort($max_diretor);
-                    $count_max_diretor = 0;
-                    foreach ($diretor as $dir) {
-                        if ($dir == key($max_diretor))
-                        $count_max_diretor++;
-                    }
-                    echo key($max_diretor) . ' (' . $count_max_diretor . ')';
+                    echo key($max_diretor) . ' (' . $max_diretor[key($max_diretor)] . ')';
                 ?></td>
                 <td><?php 
                     $max_distribuidora = array_count_values($distribuidora);
@@ -335,14 +330,12 @@
                     echo key($max_barcode);
                 ?></td>
                 <td><?php 
-                    $max_data = array_count_values($data);
-                    arsort($max_data);
-                    $count_max_data = 0;
                     foreach ($data as $dat) {
-                        if (date('m/Y', strtotime($dat)) == date('m/Y', strtotime(key($max_data))))
-                            $count_max_data++;
+                        $temp_max_data[] = date('m/Y', strtotime($dat));
                     }
-                    echo date('m/Y', strtotime(key($max_data))) . ' (' . $count_max_data . ')';
+                    $max_data = array_count_values($temp_max_data);
+                    arsort($max_data);
+                    echo key($max_data) . ' (' . $max_data[key($max_data)] . ')';
                 ?></td>
             </tr>
 <?php
