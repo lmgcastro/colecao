@@ -123,7 +123,7 @@
     }
     echo '</datalist>';
 ?>
-            <input type="text" name="titulo" placeholder="Título" size="24">
+            <input type="text" name="titulo" placeholder="Título" size="25">
             <label>Lançamento <input type="date" name="lancamento"></label>
             <input list="diretor" name="diretor" placeholder="Diretor" size="25">
 <?php
@@ -149,21 +149,12 @@
 ?>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
             <input type="text" name="duracao" placeholder="Duração" size="5">
-            <input list="midia" name="midia" placeholder="Mídia" size="10">
-<?php
-    echo '<datalist id="midia">';
-    $temp_unique_midia = array_unique($midia);
-    $unique_midia = array_values($temp_unique_midia);
-    sort($unique_midia);
-    for ($c = 0; $c < count($unique_midia); $c++) {
-            echo '<option value="' . $unique_midia[$c] . '">';
-    }
-    echo '</datalist>';
-?>
+            <label><input type="radio" name="midia" value="Blu-ray">Blu-ray</label>
+            <label><input type="radio" name="midia" value="DVD">DVD</label>
             <label>Região 
-            <label><input type="checkbox" name="regiao[]" value="A">A</label>
-            <label><input type="checkbox" name="regiao[]" value="B">B</label>
-            <label><input type="checkbox" name="regiao[]" value="C">C</label>
+                <label><input type="checkbox" name="regiao[]" value="A">A</label>
+                <label><input type="checkbox" name="regiao[]" value="B">B</label>
+                <label><input type="checkbox" name="regiao[]" value="C">C</label>
             </label>
             <input list="proporcao" name="proporcao" placeholder="Proporção" size="20">
 <?php
@@ -212,7 +203,7 @@
     echo '</datalist>';
 ?>
             <label>Data <input type="date" name="data"></label>
-            <button id="submit" type="submit" name="submit">Add</button>
+            <button id="submit" type="submit" name="submit">Adicionar</button>
         </form>
     </div>
     <!-- END OF INPUTS -->
