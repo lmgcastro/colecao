@@ -11,7 +11,18 @@ $(function() {
             $('#△').prop('disabled', false);
             $('#▽').prop('disabled', false);
         }
-    })
+    });
+	$("#regiaoBD").hide();
+	$("#regiaoDVD").hide();
+	$(".midia").on('click', function() {
+        if (this.value == 'Blu-ray') {
+			$("#regiaoDVD").hide();
+			$("#regiaoBD").show();
+		} else {
+			$("#regiaoBD").hide();
+			$("#regiaoDVD").show();
+		}
+    });
     $('.titulo').on('click', function() {
         $('#barcodeImg').hide();
         $('#posterImg').show();
