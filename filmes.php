@@ -151,11 +151,21 @@
             <input type="text" name="duracao" placeholder="Duração" size="5">
             <label><input type="radio" name="midia" value="Blu-ray">Blu-ray</label>
             <label><input type="radio" name="midia" value="DVD">DVD</label>
-            <label>Região 
-                <label><input type="checkbox" name="regiao[]" value="A">A</label>
-                <label><input type="checkbox" name="regiao[]" value="B">B</label>
-                <label><input type="checkbox" name="regiao[]" value="C">C</label>
-            </label>
+            <div id="regiaoBD">
+				<label>Região 
+                	<label><input type="checkbox" name="regiao[]" value="A">A</label>
+					<label><input type="checkbox" name="regiao[]" value="B">B</label>
+					<label><input type="checkbox" name="regiao[]" value="C">C</label>
+				</label>
+			</div>
+			<div id="regiaoDVD">
+				<label>Região 
+					<label><input type="checkbox" name="regiao[]" value="1">1</label>
+					<label><input type="checkbox" name="regiao[]" value="2">2</label>
+					<label><input type="checkbox" name="regiao[]" value="3">3</label>
+					<label><input type="checkbox" name="regiao[]" value="4">4</label>
+				</label>
+			</div>
             <input list="proporcao" name="proporcao" placeholder="Proporção" size="20">
 <?php
     echo '<datalist id="proporcao">';
