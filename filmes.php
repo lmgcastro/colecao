@@ -149,8 +149,8 @@
 ?>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
             <input type="text" name="duracao" placeholder="Duração" size="5">
-            <label><input type="radio" name="midia" value="Blu-ray">Blu-ray</label>
-            <label><input type="radio" name="midia" value="DVD">DVD</label>
+            <label><input class="midia" type="radio" name="midia" value="Blu-ray">Blu-ray</label>
+            <label><input class="midia" type="radio" name="midia" value="DVD">DVD</label>
             <div id="regiaoBD">
 				<label>Região 
                 	<label><input type="checkbox" name="regiao[]" value="A">A</label>
