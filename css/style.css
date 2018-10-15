@@ -31,6 +31,10 @@
     color: grey;
 }
 
+#regiaoBD, #regiaoDVD {
+	display: inline-block;
+}
+
 #posterImg {
     top: 50%;
     left: 50%;
@@ -93,7 +97,7 @@ td {
 }
 
 #addFilme {
-    width: 93%;
+    width: 92%;
     margin: auto;
     display: none;
     border: 1px solid black;
