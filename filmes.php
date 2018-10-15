@@ -269,9 +269,10 @@
                         $barcodes_dvd[] = $barcode[$c];
                     }
                 }
+                $unique_titulo = array_unique($titulo);
                 $unique_barcodes_bluray = array_unique($barcodes_bluray);
                 $unique_barcodes_dvd = array_unique($barcodes_dvd);
-                echo 'Filmes: ' . count($titulo) . ' | Blu-rays: ' . count($barcodes_bluray) . ' (' . count($unique_barcodes_bluray) . ')' . ' | DVDs: ' . count($barcodes_dvd) . ' (' . count($unique_barcodes_dvd) . ')'
+                echo 'Filmes: ' . count($unique_titulo) . ' | Blu-rays: ' . count($barcodes_bluray) . ' (' . count($unique_barcodes_bluray) . ')' . ' | DVDs: ' . count($barcodes_dvd) . ' (' . count($unique_barcodes_dvd) . ')'
                 ?></td>
                 <td><?php 
                     $max_ano = array_count_values($ano);
