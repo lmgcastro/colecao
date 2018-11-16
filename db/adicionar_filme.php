@@ -7,6 +7,7 @@
     $diretor = $_POST['diretor'];
     $distribuidora = $_POST['distribuidora'];
     $imdb = $_POST['imdb'];
+    $imdbid = $_POST['imdbid'];
     $duracao = $_POST['duracao'];
     $midia = $_POST['midia'];
     $regiao = '';
@@ -23,7 +24,7 @@
     $loja = $_POST['loja'];
     $data = $_POST['data'];
 
-    $sql = "INSERT INTO filmes VALUES ('$colecao', '$titulo', '$lancamento', '$diretor', '$distribuidora', $imdb, $duracao, '$midia', '$regiao', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$loja', '$data');";
+    $sql = "INSERT INTO filmes VALUES ('$colecao', '$titulo', '$lancamento', '$diretor', '$distribuidora', $imdb, '$imdbid', $duracao, '$midia', '$regiao', '$proporcao', '$audio', $discos, '$replicadora', '$barcode', '$loja', '$data');";
     mysqli_query($conn, $sql);
 
     header("Location: ../filmes.php?adicionar=sucesso");

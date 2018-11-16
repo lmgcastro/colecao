@@ -33,9 +33,11 @@
             $orderColumn = 'Titulo';
         }
         if ($filterField == 'Todos') {
-            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, year(Lancamento), Diretor, Distribuidora, IMDb, Midia, Proporcao, Audio, Replicadora, Barcode, CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
+            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, year(Lancamento), Diretor, Distribuidora, IMDb, `IMDb ID`, Midia, Proporcao, Audio, Replicadora, Barcode, CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
         } else if ($filterField == 'IMDb') {
             $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+        } else if ($filterField == 'IMDb ID') {
+            $sql = "SELECT * FROM filmes WHERE `" . $filterField . "` " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         } else if ($filterField == 'Data') {
             $sql = "SELECT * FROM filmes WHERE CONCAT(CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
         } else {
@@ -56,6 +58,7 @@
                 $diretor[] = $row['Diretor'];
                 $distribuidora[] = $row['Distribuidora'];
                 $imdb[] = $row['IMDb'];
+                $imdbid[] = $row['IMDb ID'];
                 $duracao[] = $row['Duracao'];
                 $midia[] = $row['Midia'];
                 $regiao[] = $row['Regiao'];
@@ -91,6 +94,7 @@
                     <option value="Diretor">Diretor</option>
                     <option value="Distribuidora">Distribuidora</option>
                     <option value="IMDb">IMDb</option>
+                    <option value="IMDb ID">IMDb ID</option>
                     <option value="Duracao">Duração</option>
                     <option value="Midia">Mídia</option>
                     <option value="Regiao">Região</option>
@@ -148,25 +152,22 @@
     echo '</datalist>';
 ?>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
+            <input type="text" name="imdbid" placeholder="IMDb ID" size="15" maxlength="9">
             <input type="text" name="duracao" placeholder="Duração" size="5">
             <label><input class="midia" type="radio" name="midia" value="Blu-ray">Blu-ray</label>
             <label><input class="midia" type="radio" name="midia" value="DVD">DVD</label>
             <div id="regiaoBD">
-				<label>Região 
-                	<label><input type="checkbox" name="regiao[]" value="A">A</label>
-					<label><input type="checkbox" name="regiao[]" value="B">B</label>
-					<label><input type="checkbox" name="regiao[]" value="C">C</label>
-				</label>
+                <label><input type="checkbox" name="regiao[]" value="A">A</label>
+                <label><input type="checkbox" name="regiao[]" value="B">B</label>
+                <label><input type="checkbox" name="regiao[]" value="C">C</label>
 			</div>
 			<div id="regiaoDVD">
-				<label>Região 
-					<label><input type="checkbox" name="regiao[]" value="1">1</label>
-					<label><input type="checkbox" name="regiao[]" value="2">2</label>
-					<label><input type="checkbox" name="regiao[]" value="3">3</label>
-					<label><input type="checkbox" name="regiao[]" value="4">4</label>
-				</label>
+                <label><input type="checkbox" name="regiao[]" value="1">1</label>
+                <label><input type="checkbox" name="regiao[]" value="2">2</label>
+                <label><input type="checkbox" name="regiao[]" value="3">3</label>
+                <label><input type="checkbox" name="regiao[]" value="4">4</label>
 			</div>
-            <input list="proporcao" name="proporcao" placeholder="Proporção" size="20">
+            <input list="proporcao" name="proporcao" placeholder="Proporção" size="10">
 <?php
     echo '<datalist id="proporcao">';
     $temp_unique_proporcao = array_unique($proporcao);
@@ -177,7 +178,7 @@
     }
     echo '</datalist>';
 ?>
-            <input list="audio" name="audio" placeholder="Áudio" size="15">
+            <input list="audio" name="audio" placeholder="Áudio" size="10">
 <?php
     echo '<datalist id="audio">';
     $temp_unique_audio = array_unique($audio);
@@ -240,7 +241,6 @@
     if (!$noResults) {
         $ccount = 0;
         for ($c = 0; $c < count($titulo); $c++) {
-            $barcode_year = $barcode[$c] . '_' . $ano[$c];
             $imdb_percent = $imdb[$c] * 10;
             if ($colecao[$c] != '' && $ccount == 0 && !isset($_POST['filter'])) {
                 $ccount += 1;
@@ -251,7 +251,7 @@
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
-                <td id="<?php echo $barcode_year ?>" class="titulo"><?php echo $titulo[$c] ?></td>
+                <td id="<?php echo $imdbid[$c] ?>" class="titulo"><?php echo $titulo[$c] ?></td>
                 <td><?php echo $ano[$c] ?></td>
                 <td><?php echo $diretor[$c] ?></td>
                 <td><?php echo $distribuidora[$c] ?></td>
