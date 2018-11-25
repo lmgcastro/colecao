@@ -33,19 +33,21 @@
             $orderColumn = 'Titulo';
         }
         if ($filterField == 'Todos') {
-            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, year(Lancamento), Diretor, Distribuidora, IMDb, `IMDb ID`, Midia, Proporcao, Audio, Replicadora, Barcode, CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo;";
+            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, year(Lancamento), Diretor, Distribuidora, IMDb, `IMDb ID`, Midia, Proporcao, Audio, Replicadora, Barcode, CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo, Midia;";
         } else if ($filterField == 'IMDb') {
-            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
         } else if ($filterField == 'IMDb ID') {
-            $sql = "SELECT * FROM filmes WHERE `" . $filterField . "` " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
-        } else if ($filterField == 'Data') {
-            $sql = "SELECT * FROM filmes WHERE CONCAT(CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
-        } else {
+            $sql = "SELECT * FROM filmes WHERE `" . $filterField . "` " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
+        } else if ($filterField == 'Midia') {    
             $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
+        } else if ($filterField == 'Data') {
+            $sql = "SELECT * FROM filmes WHERE CONCAT(CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
+        } else {
+            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
         }
         $footer = false;
     } else {
-        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento;";
+        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento, Midia;";
         $footer = true;
     }
         $result = mysqli_query($conn, $sql);
@@ -67,8 +69,9 @@
                 $discos[] = $row['Discos'];
                 $replicadora[] = $row['Replicadora'];
                 $barcode[] = $row['Barcode'];
-                $loja[] = $row['Loja'];
                 $data[] = $row['Data'];
+                $loja[] = $row['Loja'];
+                $preco[] = $row['Preco'];
             }
         } else {
             $noResults = true;
@@ -103,8 +106,9 @@
                     <option value="Discos">Discos</option>
                     <option value="Replicadora">Replicadora</option>
                     <option value="Barcode">Cód. de Barras</option>
-                    <option value="Loja">Loja</option>
                     <option value="Data">Data</option>
+                    <option value="Loja">Loja</option>
+                    <option value="Preco">Preço</option>
                 </select>
                 <button id="filtrar" type="submit" name="filter">Filtrar</button>
             </form>
@@ -189,8 +193,8 @@
     }
     echo '</datalist>';
 ?>
-            <input type="text" name="discos" placeholder="Discos" size="4">
-            <input list="replicadora" name="replicadora" placeholder="Replicadora" size="15">
+            <input type="text" name="discos" placeholder="Discos" size="3">
+            <input list="replicadora" name="replicadora" placeholder="Replicadora" size="12">
 <?php
     echo '<datalist id="replicadora">';
     $temp_unique_replicadora = array_unique($replicadora);
@@ -201,7 +205,8 @@
     }
     echo '</datalist>';
 ?>
-            <input id="barcodeForm" type="text" name="barcode" placeholder="Código de Barras" size="15" maxlength="13">
+            <input id="barcodeForm" type="text" name="barcode" placeholder="Código de Barras" size="14" maxlength="13">
+            <label>Data <input type="date" name="data"></label>
             <input list="loja" name="loja" placeholder="Loja" size="15">
 <?php
     echo '<datalist id="loja">';
@@ -213,7 +218,7 @@
     }
     echo '</datalist>';
 ?>
-            <label>Data <input type="date" name="data"></label>
+            <input type="text" name="preco" placeholder="Preço" size="2">
             <button id="submit" type="submit" name="submit">Adicionar</button>
         </form>
     </div>
@@ -270,8 +275,30 @@
         }
         if ($footer) {
 ?>
-            <tr id="footer">
-                <td colspan="2"><?php
+            <tr id="footer"><?php
+                $imdbid_aux = 'test';
+                for ($c = 0; $c < count($imdbid); $c++) {
+                    if ($imdbid[$c] != $imdbid_aux) {
+                        $ano_footer[] = $ano[$c];
+                        $diretor_footer[] = $diretor[$c];
+                        $distribuidora_footer[] = $distribuidora[$c];
+                        $imdb_footer[] = $imdb[$c];
+                        $imdbid_footer[] = $imdbid[$c];
+                        $duracao_footer[] = $duracao[$c];
+                        $proporcao_footer[] = $proporcao[$c];
+                        $replicadora_footer[] = $replicadora[$c];
+                    }
+                    $imdbid_aux = $imdbid[$c];
+                }
+                $barcode_aux = 789;
+                $preco_total = 0;
+                for ($c = 0; $c < count($barcode); $c++) {
+                    if ($barcode[$c] != $barcode_aux) {
+                        $preco_total += $preco[$c];
+                    }
+                    $barcode_aux = $barcode[$c];
+                }
+                ?><td colspan="2"><?php
                 for ($c = 0; $c < count($midia); $c++) {
                     if ($midia[$c] == 'Blu-ray') {
                         $barcodes_bluray[] = $barcode[$c];
@@ -279,32 +306,31 @@
                         $barcodes_dvd[] = $barcode[$c];
                     }
                 }
-                $unique_titulo = array_unique($titulo);
                 $unique_barcodes_bluray = array_unique($barcodes_bluray);
                 $unique_barcodes_dvd = array_unique($barcodes_dvd);
-                echo 'Filmes: ' . count($unique_titulo) . ' | Blu-rays: ' . count($barcodes_bluray) . ' (' . count($unique_barcodes_bluray) . ')' . ' | DVDs: ' . count($barcodes_dvd) . ' (' . count($unique_barcodes_dvd) . ')'
+                echo 'Filmes: ' . count($imdbid_footer) . ' | Blu-rays: ' . count($barcodes_bluray) . ' (' . count($unique_barcodes_bluray) . ')' . ' | DVDs: ' . count($barcodes_dvd) . ' (' . count($unique_barcodes_dvd) . ')';
                 ?></td>
                 <td><?php 
-                    $max_ano = array_count_values($ano);
+                    $max_ano = array_count_values($ano_footer);
                     arsort($max_ano);
                     echo key($max_ano);
                 ?></td>
                 <td><?php 
-                    $max_diretor = array_count_values($diretor);
+                    $max_diretor = array_count_values($diretor_footer);
                     arsort($max_diretor);
                     echo key($max_diretor) . ' (' . $max_diretor[key($max_diretor)] . ')';
                 ?></td>
                 <td><?php 
-                    $max_distribuidora = array_count_values($distribuidora);
+                    $max_distribuidora = array_count_values($distribuidora_footer);
                     arsort($max_distribuidora);
                     echo key($max_distribuidora);
                 ?></td>
                 <td><?php 
-                    $avg_imdb = round(array_sum($imdb) / count($imdb), 1);
+                    $avg_imdb = round(array_sum($imdb_footer) / count($imdb_footer), 1);
                     $avg_imdb_percent = $avg_imdb * 10;
-                    echo '<div id="imdbdivfooter" style="width:' . $avg_imdb_percent . '%">'. $avg_imdb . '</div>';
+                    echo '<div id="imdbdivfooter" style="width:' . $avg_imdb_percent . '%">' . $avg_imdb . '</div>';
                 ?></td>
-                <td>~<?php echo round(array_sum($duracao) / 60, 0) ?>h</td>
+                <td>~<?php echo round(array_sum($duracao_footer) / 60, 0) ?>h</td>
                 <td><?php 
                     $max_midia = array_count_values($midia);
                     arsort($max_midia);
@@ -316,7 +342,7 @@
                     echo key($max_regiao);
                 ?></td>
                 <td><?php 
-                    $max_proporcao = array_count_values($proporcao);
+                    $max_proporcao = array_count_values($proporcao_footer);
                     arsort($max_proporcao);
                     echo key($max_proporcao);
                 ?></td>
@@ -331,14 +357,15 @@
                     echo key($max_discos);
                 ?></td>
                 <td><?php 
-                    $max_replicadora = array_count_values($replicadora);
+                    $max_replicadora = array_count_values($replicadora_footer);
                     arsort($max_replicadora);
                     echo key($max_replicadora);
                 ?></td>
-                <td><?php 
-                    $max_barcode = array_count_values($barcode);
+                <td><?php
+                    echo 'Total: R$ ' . $preco_total; 
+                    /*$max_barcode = array_count_values($barcode);
                     arsort($max_barcode);
-                    echo key($max_barcode);
+                    echo key($max_barcode);*/
                 ?></td>
                 <td><?php 
                     foreach ($data as $dat) {
