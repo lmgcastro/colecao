@@ -260,7 +260,7 @@
                 <td><?php echo $ano[$c] ?></td>
                 <td><?php echo $diretor[$c] ?></td>
                 <td><?php echo $distribuidora[$c] ?></td>
-                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><?php echo $imdb[$c] ?></div></td>
+                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
                 <td><?php echo $duracao[$c] ?> min.</td>
                 <td><?php echo $midia[$c] ?></td>
                 <td><?php echo $regiao[$c] ?></td>

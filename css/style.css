@@ -103,6 +103,11 @@ td {
     border: 1px solid black;
 }
 
+.imdblink {
+    color: inherit;
+    text-decoration: none;
+}
+
 #footer {
     background-color: black; 
     color: white;
