@@ -1,6 +1,6 @@
 <?php
     header('Content-type: text/html; charset=utf-8 charset=UTF-8');
-    include_once 'db/dbh.php';
+    include_once 'db/dbh_filmes.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,6 +13,19 @@
 <?php
     //SELECT PREENCHIMENTO TABELA
     $noResults = false;
+    $sql = "SELECT colecao.Colecao, filme.Titulo, filme.Lancamento, diretor.Diretor, 
+        distribuidora.Distribuidora, imdb.IMDb, imdb.ID AS IMDbID, filme.Duracao, midia.Midia, 
+        filme.Regiao, proporcao.Proporcao, audio.Audio, filme.Discos, replicadora.Replicadora, 
+        filme.CodBarras, filme.Data, loja.Loja, filme.Preco FROM filme 
+        INNER JOIN colecao ON filme.Colecao = colecao.ID 
+        INNER JOIN diretor ON filme.Diretor = diretor.ID 
+        INNER JOIN distribuidora ON filme.Distribuidora = distribuidora.ID 
+        INNER JOIN imdb ON filme.IMDb = imdb.ID 
+        INNER JOIN midia ON filme.Midia = midia.ID 
+        INNER JOIN proporcao ON filme.Proporcao = proporcao.ID 
+        INNER JOIN audio ON filme.Audio = audio.ID 
+        INNER JOIN replicadora ON filme.Replicadora = replicadora.ID 
+        INNER JOIN loja ON filme.Loja = loja.ID ";
     if (isset($_POST['filter'])) {
         $filterValue = $_POST['filterValue'];
         $filterField = $_POST['filterField'];
@@ -22,32 +35,43 @@
             $likeNotLike = 'LIKE';
         }
         if (isset($_POST['setOrder'])) {
-            if ($filterField == 'Titulo') {
+            if ($filterField == 'filme.Titulo') {
                 $orderColumn = $filterField . ' ' . $_POST['setOrder'];
-            } else if ($filterField == 'Data') {
-                $orderColumn = $filterField . ' ' . $_POST['setOrder'] . ', Lancamento';
+            } else if ($filterField == 'filme.Data') {
+                $orderColumn = $filterField . ' ' . $_POST['setOrder'] . ', filme.Lancamento';
             } else {
-                $orderColumn = $filterField . ' ' . $_POST['setOrder'] . ', Titulo';
+                $orderColumn = $filterField . ' ' . $_POST['setOrder'] . ', filme.Ordem';
             }
         } else {
             $orderColumn = 'Titulo';
         }
         if ($filterField == 'Todos') {
-            $sql = "SELECT * FROM filmes WHERE CONCAT(Titulo, year(Lancamento), Diretor, Distribuidora, IMDb, `IMDb ID`, Midia, Proporcao, Audio, Replicadora, Barcode, CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY Titulo, Midia;";
-        } else if ($filterField == 'IMDb') {
-            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
-        } else if ($filterField == 'IMDb ID') {
-            $sql = "SELECT * FROM filmes WHERE `" . $filterField . "` " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
-        } else if ($filterField == 'Midia') {    
-            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ";";
-        } else if ($filterField == 'Data') {
-            $sql = "SELECT * FROM filmes WHERE CONCAT(CASE WHEN day(Data) < 10 THEN CONCAT('0', day(Data)) ELSE day(Data) END, '/', CASE WHEN month(Data) < 10 THEN CONCAT('0', month(Data)) ELSE month(Data) END, '/', year(Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
+            $sql .= "WHERE CONCAT(filme.Titulo, year(filme.Lancamento), diretor.Diretor, distribuidora.Distribuidora, 
+            imdb.IMDb, imdb.ID, midia.Midia, proporcao.Proporcao, audio.Audio, replicadora.Replicadora, 
+            filme.CodBarras, CASE WHEN day(filme.Data) < 10 THEN CONCAT('0', day(filme.Data)) 
+            ELSE day(filme.Data) END, '/', CASE WHEN month(filme.Data) < 10 THEN CONCAT('0', month(filme.Data)) 
+            ELSE month(filme.Data) END, '/', year(filme.Data)) " . $likeNotLike . " '%" . $filterValue . 
+            "%' ORDER BY filme.Ordem, midia.Midia;";
+        } else if ($filterField == 'imdb.IMDb') {
+            $sql .= "WHERE " . $filterField . " " . $likeNotLike . " '" . $filterValue . "%' ORDER BY " . $orderColumn . 
+            ", midia.Midia;";
+        } else if ($filterField == 'midia.Midia') {
+            $sql .= "WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . 
+            ";";
+        } else if ($filterField == 'filme.Data') {
+            $sql .= "WHERE CONCAT(CASE WHEN day(filme.Data) < 10 THEN CONCAT('0', day(filme.Data)) ELSE day(filme.Data) 
+            END, '/', CASE WHEN month(filme.Data) < 10 THEN CONCAT('0', month(filme.Data)) ELSE month(filme.Data) 
+            END, '/', year(filme.Data)) " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . 
+            ", midia.Midia;";
         } else {
-            $sql = "SELECT * FROM filmes WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . ", Midia;";
+            $sql .= "WHERE " . $filterField . " " . $likeNotLike . " '%" . $filterValue . "%' ORDER BY " . $orderColumn . 
+            ", midia.Midia;";
         }
         $footer = false;
-    } else {
-        $sql = "SELECT * FROM filmes ORDER BY Colecao, CASE WHEN (Colecao = '') THEN Diretor END, Lancamento, Midia;";
+    } else { 
+        $sql .= "ORDER BY colecao.Colecao, 
+        CASE WHEN (colecao.Colecao = '') THEN diretor.Ordem END, 
+        filme.Lancamento, midia.Midia;";
         $footer = true;
     }
         $result = mysqli_query($conn, $sql);
@@ -60,7 +84,7 @@
                 $diretor[] = $row['Diretor'];
                 $distribuidora[] = $row['Distribuidora'];
                 $imdb[] = $row['IMDb'];
-                $imdbid[] = $row['IMDb ID'];
+                $imdbid[] = $row['IMDbID'];
                 $duracao[] = $row['Duracao'];
                 $midia[] = $row['Midia'];
                 $regiao[] = $row['Regiao'];
@@ -68,7 +92,7 @@
                 $audio[] = $row['Audio'];
                 $discos[] = $row['Discos'];
                 $replicadora[] = $row['Replicadora'];
-                $barcode[] = $row['Barcode'];
+                $codbarras[] = $row['CodBarras'];
                 $data[] = $row['Data'];
                 $loja[] = $row['Loja'];
                 $preco[] = $row['Preco'];
@@ -91,31 +115,31 @@
                 <input type="text" name="filterValue" placeholder="Buscar" size="10">
                 <select id="fieldsCombo" name="filterField">
                     <option id="todos" value="Todos">Todos</option>
-                    <option value="Colecao">Coleção</option>
-                    <option value="Titulo">Título</option>
-                    <option value="Lancamento">Lançamento</option>
-                    <option value="Diretor">Diretor</option>
-                    <option value="Distribuidora">Distribuidora</option>
-                    <option value="IMDb">IMDb</option>
-                    <option value="IMDb ID">IMDb ID</option>
-                    <option value="Duracao">Duração</option>
-                    <option value="Midia">Mídia</option>
-                    <option value="Regiao">Região</option>
-                    <option value="Proporcao">Proporção</option>
-                    <option value="Audio">Áudio</option>
-                    <option value="Discos">Discos</option>
-                    <option value="Replicadora">Replicadora</option>
-                    <option value="Barcode">Cód. de Barras</option>
-                    <option value="Data">Data</option>
-                    <option value="Loja">Loja</option>
-                    <option value="Preco">Preço</option>
+                    <option value="colecao.Colecao">Coleção</option>
+                    <option value="filme.Ordem">Título</option>
+                    <option value="filme.Lancamento">Lançamento</option>
+                    <option value="diretor.Ordem">Diretor</option>
+                    <option value="distribuidora.Distribuidora">Distribuidora</option>
+                    <option value="imdb.IMDb">IMDb</option>
+                    <option value="imdb.ID">IMDb ID</option>
+                    <option value="filme.Duracao">Duração</option>
+                    <option value="midia.Midia">Mídia</option>
+                    <option value="filme.Regiao">Região</option>
+                    <option value="proporcao.Proporcao">Proporção</option>
+                    <option value="audio.Audio">Áudio</option>
+                    <option value="filme.Discos">Discos</option>
+                    <option value="replicadora.Replicadora">Replicadora</option>
+                    <option value="filme.CodBarras">Cód. de Barras</option>
+                    <option value="filme.Data">Data</option>
+                    <option value="loja.Loja">Loja</option>
+                    <option value="filme.Preco">Preço</option>
                 </select>
                 <button id="filtrar" type="submit" name="filter">Filtrar</button>
             </form>
         </li>
     </ul>
     <img id="posterImg" border="5" src="">
-    <img id="barcodeImg" border="5" src="">
+    <img id="codBarrasImg" border="5" src="">
     
     <!-- INPUTS -->
     <div id="addFilme">
@@ -131,9 +155,12 @@
     }
     echo '</datalist>';
 ?>
-            <input type="text" name="titulo" placeholder="Título" size="25">
+            <input id="tit_ord" type="button">
+            <input id="titulo_inp" type="text" name="titulo" placeholder="Título" size="25">
+            <input id="ordem_titulo" type="text" name="ordem_titulo" placeholder="Ordem (Título)" size="25">
             <label>Lançamento <input type="date" name="lancamento"></label>
-            <input list="diretor" name="diretor" placeholder="Diretor" size="25">
+            <input id="dir_ord" type="button">
+            <input id="diretor_inp" list="diretor" name="diretor" placeholder="Diretor" size="20">
 <?php
     echo '<datalist id="diretor">';
     $temp_unique_diretor = array_unique($diretor);
@@ -144,6 +171,7 @@
     }
     echo '</datalist>';
 ?>
+            <input id="ordem_diretor" type="text" name="ordem_diretor" placeholder="Ordem (Diretor)" size="20">
             <input list="distribuidora" name="distribuidora" placeholder="Distribuidora" size="15">
 <?php
     echo '<datalist id="distribuidora">';
@@ -205,7 +233,7 @@
     }
     echo '</datalist>';
 ?>
-            <input id="barcodeForm" type="text" name="barcode" placeholder="Código de Barras" size="14" maxlength="13">
+            <input id="codBarrasForm" type="text" name="codbarras" placeholder="Código de Barras" size="14" maxlength="13">
             <label>Data <input type="date" name="data"></label>
             <input list="loja" name="loja" placeholder="Loja" size="15">
 <?php
@@ -268,7 +296,7 @@
                 <td><?php echo $audio[$c] ?></td>
                 <td><?php echo $discos[$c] ?></td>
                 <td><?php echo $replicadora[$c] ?></td>
-                <td class="barcode"><?php echo $barcode[$c] ?></td>
+                <td class="codBarras"><?php echo $codbarras[$c] ?></td>
                 <td><?php echo date('d/m/Y', strtotime($data[$c])) ?></td>
             </tr>
 <?php
@@ -290,25 +318,25 @@
                     }
                     $imdbid_aux = $imdbid[$c];
                 }
-                $barcode_aux = 789;
+                $codbarras_aux = 789;
                 $preco_total = 0;
-                for ($c = 0; $c < count($barcode); $c++) {
-                    if ($barcode[$c] != $barcode_aux) {
+                for ($c = 0; $c < count($codbarras); $c++) {
+                    if ($codbarras[$c] != $codbarras_aux) {
                         $preco_total += $preco[$c];
                     }
-                    $barcode_aux = $barcode[$c];
+                    $codbarras_aux = $codbarras[$c];
                 }
                 ?><td colspan="2"><?php
                 for ($c = 0; $c < count($midia); $c++) {
                     if ($midia[$c] == 'Blu-ray') {
-                        $barcodes_bluray[] = $barcode[$c];
+                        $codbarras_bluray[] = $codbarras[$c];
                     } else {
-                        $barcodes_dvd[] = $barcode[$c];
+                        $codbarras_dvd[] = $codbarras[$c];
                     }
                 }
-                $unique_barcodes_bluray = array_unique($barcodes_bluray);
-                $unique_barcodes_dvd = array_unique($barcodes_dvd);
-                echo 'Filmes: ' . count($imdbid_footer) . ' | Blu-rays: ' . count($barcodes_bluray) . ' (' . count($unique_barcodes_bluray) . ')' . ' | DVDs: ' . count($barcodes_dvd) . ' (' . count($unique_barcodes_dvd) . ')';
+                $unique_codbarras_bluray = array_unique($codbarras_bluray);
+                $unique_codbarras_dvd = array_unique($codbarras_dvd);
+                echo 'Filmes: ' . count($imdbid_footer) . ' | Blu-rays: ' . count($codbarras_bluray) . ' (' . count($unique_codbarras_bluray) . ')' . ' | DVDs: ' . count($codbarras_dvd) . ' (' . count($unique_codbarras_dvd) . ')';
                 ?></td>
                 <td><?php 
                     $max_ano = array_count_values($ano_footer);
@@ -363,9 +391,6 @@
                 ?></td>
                 <td><?php
                     echo 'Total: R$ ' . $preco_total; 
-                    /*$max_barcode = array_count_values($barcode);
-                    arsort($max_barcode);
-                    echo key($max_barcode);*/
                 ?></td>
                 <td><?php 
                     foreach ($data as $dat) {

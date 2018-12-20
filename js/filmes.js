@@ -12,6 +12,16 @@ $(function() {
             $('#▽').prop('disabled', false);
         }
     });
+    $("#ordem_titulo").hide();
+    $("#tit_ord").on('click', function() {
+        $("#titulo_inp").toggle();
+        $("#ordem_titulo").toggle();
+    });
+    $("#ordem_diretor").hide();
+    $("#dir_ord").on('click', function() {
+        $("#diretor_inp").toggle();
+        $("#ordem_diretor").toggle();
+    });
 	$("#regiaoBD").hide();
 	$("#regiaoDVD").hide();
 	$(".midia").on('click', function() {
@@ -24,7 +34,7 @@ $(function() {
 		}
     });
     $('.titulo').on('click', function() {
-        $('#barcodeImg').hide();
+        $('#codBarrasImg').hide();
         $('#posterImg').show();
         $('#posterImg').attr('src', 'images/posters/' + this.id + '.jpg');
     });
@@ -34,15 +44,15 @@ $(function() {
         $('#posterImg').attr('src', '');
     });
     
-    $('.barcode').on('click', function() {
+    $('.codBarras').on('click', function() {
         $('#posterImg').hide();
-        $('#barcodeImg').show();
-        $('#barcodeImg').attr('src', 'images/barcodes/' + this.innerHTML + '.gif');
+        $('#codBarrasImg').show();
+        $('#codBarrasImg').attr('src', 'images/barcodes/' + this.innerHTML + '.gif');
     });
 
-    $('#barcodeImg').on('click', function() {
-        $('#barcodeImg').hide();
-        $('#barcodeImg').attr('src', '');
+    $('#codBarrasImg').on('click', function() {
+        $('#codBarrasImg').hide();
+        $('#codBarrasImg').attr('src', '');
     });
 
     $('#novo').on('click', function() {
@@ -50,6 +60,6 @@ $(function() {
     });
 
     $('#submit').on('click', function() {
-        window.open('https://barcode.tec-it.com/en/EAN13?data=' + $('#barcodeForm').val());
+        window.open('https://barcode.tec-it.com/en/EAN13?data=' + $('#codBarrasForm').val());
     });
 });
