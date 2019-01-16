@@ -12,6 +12,11 @@ $(function() {
             $('#▽').prop('disabled', false);
         }
     });
+    $("#ordem_colecao").hide();
+    $("#col_ord").on('click', function() {
+        $("#colecao_inp").toggle();
+        $("#ordem_colecao").toggle();
+    });
     $("#ordem_titulo").hide();
     $("#tit_ord").on('click', function() {
         $("#titulo_inp").toggle();
@@ -33,24 +38,20 @@ $(function() {
 			$("#regiaoDVD").show();
 		}
     });
+    var c;
     $('.titulo').on('click', function() {
-        $('#codBarrasImg').hide();
+        c = this.id.substring(22,25);
+        $('#filmeInfo' + c).show();
+        $('#posterImg').attr('src', 'images/posters/' + this.id.substring(0,9) + '.jpg');
         $('#posterImg').show();
-        $('#posterImg').attr('src', 'images/posters/' + this.id + '.jpg');
+        $('#codBarrasImg').attr('src', 'images/barcodes/' + this.id.substring(9,22) + '.gif');
+        $('#codBarrasImg').show();
     });
 
     $('#posterImg').on('click', function() {
+        $('#filmeInfo' + c).hide();
         $('#posterImg').hide();
         $('#posterImg').attr('src', '');
-    });
-    
-    $('.codBarras').on('click', function() {
-        $('#posterImg').hide();
-        $('#codBarrasImg').show();
-        $('#codBarrasImg').attr('src', 'images/barcodes/' + this.innerHTML + '.gif');
-    });
-
-    $('#codBarrasImg').on('click', function() {
         $('#codBarrasImg').hide();
         $('#codBarrasImg').attr('src', '');
     });

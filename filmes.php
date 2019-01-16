@@ -69,8 +69,8 @@
         }
         $footer = false;
     } else { 
-        $sql .= "ORDER BY colecao.Colecao, 
-        CASE WHEN (colecao.Colecao = '') THEN diretor.Ordem END, 
+        $sql .= "ORDER BY colecao.Ordem, 
+        CASE WHEN (colecao.Ordem = '') THEN diretor.Ordem END, 
         filme.Lancamento, midia.Midia;";
         $footer = true;
     }
@@ -100,6 +100,24 @@
         } else {
             $noResults = true;
         }
+        for ($c = 0; $c < count($titulo); $c++) {
+            $reg = ($regiao[$c] == '') ? '---' : $regiao[$c];
+?>
+    <div id="filmeInfo<?php echo $c?>"><?php echo nl2br (
+        "<strong>Distribuidora:</strong> \n" . $distribuidora[$c] .
+        "\n<strong>Mídia:</strong> \n" . $midia[$c] . 
+        "\n<strong>Região:</strong> \n" . $reg . 
+        "\n<strong>Proporção:</strong> \n" . $proporcao[$c] .
+        "\n<strong>Áudio:</strong> \n" . $audio[$c] . 
+        "\n<strong>Disco(s):</strong> \n" . $discos[$c] . 
+        "\n<strong>Replicadora:</strong> \n" . $replicadora[$c] . 
+        "\n<strong>Código de barras:</strong> \n" . $codbarras[$c] . 
+        "\n<strong>Data:</strong> \n" . date("d/m/Y", strtotime($data[$c])) . 
+        "\n<strong>Loja:</strong> \n" . $loja[$c] . 
+        "\n<strong>Preço:</strong> \nR$ " . number_format($preco[$c], 2, ',', '')
+    ) ?></div>
+<?php
+        }
 ?>
     <ul class="nav">
         <li><button id="novo">Novo</button></li>
@@ -115,7 +133,7 @@
                 <input type="text" name="filterValue" placeholder="Buscar" size="10">
                 <select id="fieldsCombo" name="filterField">
                     <option id="todos" value="Todos">Todos</option>
-                    <option value="colecao.Colecao">Coleção</option>
+                    <option value="colecao.Ordem">Coleção</option>
                     <option value="filme.Ordem">Título</option>
                     <option value="filme.Lancamento">Lançamento</option>
                     <option value="diretor.Ordem">Diretor</option>
@@ -144,7 +162,8 @@
     <!-- INPUTS -->
     <div id="addFilme">
         <form action="db/adicionar_filme.php" method="POST">
-            <input list="colecao" name="colecao" placeholder="Coleção" size="20">
+            <input id="col_ord" type="button">
+            <input id="colecao_inp" list="colecao" name="colecao" placeholder="Coleção" size="20">
 <?php
     echo '<datalist id="colecao">';
     $temp_unique_colecao = array_unique($colecao);
@@ -155,6 +174,7 @@
     }
     echo '</datalist>';
 ?>
+            <input id="ordem_colecao" type="text" name="ordem_colecao" placeholder="Ordem (Coleção)" size="20">
             <input id="tit_ord" type="button">
             <input id="titulo_inp" type="text" name="titulo" placeholder="Título" size="25">
             <input id="ordem_titulo" type="text" name="ordem_titulo" placeholder="Ordem (Título)" size="25">
@@ -184,7 +204,7 @@
     echo '</datalist>';
 ?>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
-            <input type="text" name="imdbid" placeholder="IMDb ID" size="15" maxlength="9">
+            <input type="text" name="imdbid" placeholder="IMDb ID" size="12" maxlength="9">
             <input type="text" name="duracao" placeholder="Duração" size="5">
             <label><input class="midia" type="radio" name="midia" value="Blu-ray">Blu-ray</label>
             <label><input class="midia" type="radio" name="midia" value="DVD">DVD</label>
@@ -252,164 +272,107 @@
     </div>
     <!-- END OF INPUTS -->
 
+<?php
+    if (!$noResults) {
+        if (!isset($_POST['filter'])) {
+?>
     <table id="tblFilmes">
+    <tr>
+        <th>Nº</th>
+        <th>Título original</th>
+        <th>Ano</th>
+        <th>Diretor</th>
+        <th>IMDb</th>
+        <th>Duração</th>
+    </tr>
+<?php
+        $c = 0;
+        while ($colecao[$c] == '') {
+            $imdb_percent = $imdb[$c] * 10;
+?>
+            <tr>
+                <td><?php echo $c + 1 ?></td>
+                <td id="<?php echo $imdbid[$c] . $codbarras[$c] . $c ?>" class="titulo"><?php echo $titulo[$c] ?></td>
+                <td><?php echo $ano[$c] ?></td>
+                <td><?php echo $diretor[$c] ?></td>
+                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" target="_blank" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
+                <td><?php echo $duracao[$c] ?> min.</td>
+            </tr>
+<?php
+            $c++;
+        }
+?>
+    </table>
+    <table id="tblColecoes">
         <tr>
             <th>Nº</th>
             <th>Título original</th>
             <th>Ano</th>
             <th>Diretor</th>
-            <th>Distribuidora</th>
             <th>IMDb</th>
             <th>Duração</th>
-            <th>Mídia</th>
-            <th>Região</th>
-            <th>Proporção</th>
-            <th>Áudio</th>
-            <th>Discos</th>
-            <th>Replicadora</th>
-            <th>Código de Barras</th>
-            <th>Data</th>
         </tr>
 <?php
-    if (!$noResults) {
-        $ccount = 0;
-        for ($c = 0; $c < count($titulo); $c++) {
-            $imdb_percent = $imdb[$c] * 10;
-            if ($colecao[$c] != '' && $ccount == 0 && !isset($_POST['filter'])) {
-                $ccount += 1;
-?>
-                <tr><th colspan="15">Coleções</th></tr>
+            $current_colecao = '';
+            for ($c = $c; $c < count($titulo); $c++) {
+                $imdb_percent = $imdb[$c] * 10;
+                if ($colecao[$c] != $current_colecao) {
+?>           
+                <tr class="headerColecao"><th colspan="6" style="font-weight: normal"><?php echo $colecao[$c] ?></th></tr>
 <?php
+                }
+?>
+            
+            <tr>
+                <td><?php echo $c + 1 ?></td>
+                <td id="<?php echo $imdbid[$c] . $codbarras[$c] . $c ?>" class="titulo"><?php echo $titulo[$c] ?></td>
+                <td><?php echo $ano[$c] ?></td>
+                <td><?php echo $diretor[$c] ?></td>
+                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" target="_blank" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
+                <td><?php echo $duracao[$c] ?> min.</td>
+            </tr>
+<?php
+                $current_colecao = $colecao[$c];
             }
+?>
+        </table>
+<?php
+        } else {
+?>
+        <table id="tblFilmes" style="float:none; margin: auto;">
+        <tr>
+            <th>Nº</th>
+            <th>Título original</th>
+            <th>Ano</th>
+            <th>Diretor</th>
+            <th>IMDb</th>
+            <th>Duração</th>
+        </tr>
+<?php
+            for ($c = 0; $c < count($titulo); $c++) {
+                $imdb_percent = $imdb[$c] * 10;
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
-                <td id="<?php echo $imdbid[$c] ?>" class="titulo"><?php echo $titulo[$c] ?></td>
+                <td id="<?php echo $imdbid[$c] . $codbarras[$c] . $c ?>" class="titulo"><?php echo $titulo[$c] ?></td>
                 <td><?php echo $ano[$c] ?></td>
                 <td><?php echo $diretor[$c] ?></td>
-                <td><?php echo $distribuidora[$c] ?></td>
-                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
+                <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" target="_blank" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
                 <td><?php echo $duracao[$c] ?> min.</td>
-                <td><?php echo $midia[$c] ?></td>
-                <td><?php echo $regiao[$c] ?></td>
-                <td><?php echo $proporcao[$c] ?></td>
-                <td><?php echo $audio[$c] ?></td>
-                <td><?php echo $discos[$c] ?></td>
-                <td><?php echo $replicadora[$c] ?></td>
-                <td class="codBarras"><?php echo $codbarras[$c] ?></td>
-                <td><?php echo date('d/m/Y', strtotime($data[$c])) ?></td>
             </tr>
 <?php
-        }
-        if ($footer) {
-?>
-            <tr id="footer"><?php
-                $imdbid_aux = 'test';
-                for ($c = 0; $c < count($imdbid); $c++) {
-                    if ($imdbid[$c] != $imdbid_aux) {
-                        $ano_footer[] = $ano[$c];
-                        $diretor_footer[] = $diretor[$c];
-                        $distribuidora_footer[] = $distribuidora[$c];
-                        $imdb_footer[] = $imdb[$c];
-                        $imdbid_footer[] = $imdbid[$c];
-                        $duracao_footer[] = $duracao[$c];
-                        $proporcao_footer[] = $proporcao[$c];
-                        $replicadora_footer[] = $replicadora[$c];
-                    }
-                    $imdbid_aux = $imdbid[$c];
-                }
-                $codbarras_aux = 789;
-                $preco_total = 0;
-                for ($c = 0; $c < count($codbarras); $c++) {
-                    if ($codbarras[$c] != $codbarras_aux) {
-                        $preco_total += $preco[$c];
-                    }
-                    $codbarras_aux = $codbarras[$c];
-                }
-                ?><td colspan="2"><?php
-                for ($c = 0; $c < count($midia); $c++) {
-                    if ($midia[$c] == 'Blu-ray') {
-                        $codbarras_bluray[] = $codbarras[$c];
-                    } else {
-                        $codbarras_dvd[] = $codbarras[$c];
-                    }
-                }
-                $unique_codbarras_bluray = array_unique($codbarras_bluray);
-                $unique_codbarras_dvd = array_unique($codbarras_dvd);
-                echo 'Filmes: ' . count($imdbid_footer) . ' | Blu-rays: ' . count($codbarras_bluray) . ' (' . count($unique_codbarras_bluray) . ')' . ' | DVDs: ' . count($codbarras_dvd) . ' (' . count($unique_codbarras_dvd) . ')';
-                ?></td>
-                <td><?php 
-                    $max_ano = array_count_values($ano_footer);
-                    arsort($max_ano);
-                    echo key($max_ano);
-                ?></td>
-                <td><?php 
-                    $max_diretor = array_count_values($diretor_footer);
-                    arsort($max_diretor);
-                    echo key($max_diretor) . ' (' . $max_diretor[key($max_diretor)] . ')';
-                ?></td>
-                <td><?php 
-                    $max_distribuidora = array_count_values($distribuidora_footer);
-                    arsort($max_distribuidora);
-                    echo key($max_distribuidora);
-                ?></td>
-                <td><?php 
-                    $avg_imdb = round(array_sum($imdb_footer) / count($imdb_footer), 1);
-                    $avg_imdb_percent = $avg_imdb * 10;
-                    echo '<div id="imdbdivfooter" style="width:' . $avg_imdb_percent . '%">' . $avg_imdb . '</div>';
-                ?></td>
-                <td>~<?php echo round(array_sum($duracao_footer) / 60, 0) ?>h</td>
-                <td><?php 
-                    $max_midia = array_count_values($midia);
-                    arsort($max_midia);
-                    echo key($max_midia);
-                ?></td>
-                <td><?php 
-                    $max_regiao = array_count_values($regiao);
-                    arsort($max_regiao);
-                    echo key($max_regiao);
-                ?></td>
-                <td><?php 
-                    $max_proporcao = array_count_values($proporcao_footer);
-                    arsort($max_proporcao);
-                    echo key($max_proporcao);
-                ?></td>
-                <td><?php 
-                    $max_audio = array_count_values($audio);
-                    arsort($max_audio);
-                    echo key($max_audio);
-                ?></td>
-                <td><?php 
-                    $max_discos = array_count_values($discos);
-                    arsort($max_discos);
-                    echo key($max_discos);
-                ?></td>
-                <td><?php 
-                    $max_replicadora = array_count_values($replicadora_footer);
-                    arsort($max_replicadora);
-                    echo key($max_replicadora);
-                ?></td>
-                <td><?php
-                    echo 'Total: R$ ' . $preco_total; 
-                ?></td>
-                <td><?php 
-                    foreach ($data as $dat) {
-                        $temp_max_data[] = date('m/Y', strtotime($dat));
-                    }
-                    $max_data = array_count_values($temp_max_data);
-                    arsort($max_data);
-                    echo key($max_data) . ' (' . $max_data[key($max_data)] . ')';
-                ?></td>
-            </tr>
-<?php
+            }
         }
     } else {
 ?>
-        <tr><td colspan="15"><strong>Nenhum registro encontrado!</strong></td></tr>
+        <table id="tblFilmes" style="float:none; margin: auto;">
+            <tr>
+                <td colspan="6"><strong>Nenhum registro encontrado!</strong></td>
+            </tr>
+        </table>
 <?php
 }
 ?>
-    </table>
     <script src="js/jquery-3.3.1.js"></script>
     <script src="js/filmes.js"></script>
 </body>

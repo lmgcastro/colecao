@@ -35,6 +35,20 @@
 	display: inline-block;
 }
 
+div[id^="filmeInfo"] {
+    top: 50%;
+    left: 15%;
+    padding: 5px;
+    width: 150px;
+    height: 400px;
+    display: none;
+    position: fixed;
+    border-width: 5px;
+    margin-top: -200px;
+    border-style: solid;
+    background-color: white;
+}
+
 #posterImg {
     top: 50%;
     left: 50%;
@@ -48,17 +62,23 @@
 
 #codBarrasImg {
     top: 50%;
-    left: 50%;
+    right: 10%;
     width: 226px;
     height: 100px;
     display: none;
     position: fixed;
     margin-top: -50px;
-    margin-left: -113px;
 }
 
 #tblFilmes {
-    width: 100%;
+    width: 49.5%;
+    float: left;
+    border-collapse: collapse;
+}
+
+#tblColecoes {
+    width: 49.5%;
+    float: right;
     border-collapse: collapse;
 }
 

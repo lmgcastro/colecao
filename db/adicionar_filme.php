@@ -2,8 +2,15 @@
     include_once "dbh_filmes.php";
 
     $colecao = $_POST['colecao'];
+    $ordem_colecao = $_POST['ordem_colecao'];
+    if ($ordem_colecao == '') {
+        $ordem_colecao = $colecao;
+    }
     $titulo = $_POST['titulo'];
     $ordem_titulo = $_POST['ordem_titulo'];
+    if ($ordem_titulo == '') {
+        $ordem_titulo = $titulo;
+    }
     $lancamento = $_POST['lancamento'];
     $diretor = $_POST['diretor'];
     $ordem_diretor = $_POST['ordem_diretor'];
@@ -33,7 +40,7 @@
     $resultCheck = mysqli_num_rows($result);
     
     if ($resultCheck == 0) {
-        $sql = "INSERT INTO colecao VALUES (DEFAULT, '$colecao');";
+        $sql = "INSERT INTO colecao VALUES (DEFAULT, '$colecao', '$ordem_colecao');";
         mysqli_query($conn, $sql);
     }
 
@@ -117,7 +124,7 @@
         mysqli_query($conn, $sql);
     }
 
-    if (Colecao == '') {
+    if ($colecao == '') {
         $sql = "INSERT INTO filme VALUES (DEFAULT, 1, '$titulo', '$ordem_titulo', '$lancamento', 
         (SELECT ID FROM diretor WHERE Diretor = '$diretor'), 
         (SELECT ID FROM distribuidora WHERE Distribuidora = '$distribuidora'), '$imdbid', '$duracao', 
