@@ -80,7 +80,7 @@
             while ($row = mysqli_fetch_assoc($result)) {
                 $colecao[] = $row['Colecao'];
                 $titulo[] = $row['Titulo'];
-                $ano[] = date('Y', strtotime($row['Lancamento']));
+                $lancamento[] = $row['Lancamento'];
                 $diretor[] = $row['Diretor'];
                 $distribuidora[] = $row['Distribuidora'];
                 $imdb[] = $row['IMDb'];
@@ -103,7 +103,7 @@
         for ($c = 0; $c < count($titulo); $c++) {
             $reg = ($regiao[$c] == '') ? '---' : $regiao[$c];
 ?>
-    <div id="filmeInfo<?php echo $c?>"><?php echo nl2br (
+    <div id="filmeInfo<?php echo $c?>" class="filmeInfo"><?php echo nl2br (
         "<strong>Distribuidora:</strong> \n" . $distribuidora[$c] .
         "\n<strong>Mídia:</strong> \n" . $midia[$c] . 
         "\n<strong>Região:</strong> \n" . $reg . 
@@ -204,7 +204,7 @@
     echo '</datalist>';
 ?>
             <input type="text" name="imdb" placeholder="IMDb" size="2">
-            <input type="text" name="imdbid" placeholder="IMDb ID" size="12" maxlength="9">
+            <input type="text" name="imdbid" placeholder="IMDb ID" size="8" maxlength="9">
             <input type="text" name="duracao" placeholder="Duração" size="5">
             <label><input class="midia" type="radio" name="midia" value="Blu-ray">Blu-ray</label>
             <label><input class="midia" type="radio" name="midia" value="DVD">DVD</label>
@@ -289,14 +289,17 @@
         $c = 0;
         while ($colecao[$c] == '') {
             $imdb_percent = $imdb[$c] * 10;
+            $horas = floor($duracao[$c] / 60);
+            $minutos = ($duracao[$c] % 60);
+            $horas_minutos = sprintf('%02dh%02d', $horas, $minutos);
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
                 <td id="<?php echo $imdbid[$c] . $codbarras[$c] . $c ?>" class="titulo"><?php echo $titulo[$c] ?></td>
-                <td><?php echo $ano[$c] ?></td>
+                <td title="<?php echo date("d/m/Y", strtotime($lancamento[$c])) ?>"><?php echo date("Y", strtotime($lancamento[$c])) ?></td>
                 <td><?php echo $diretor[$c] ?></td>
                 <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" target="_blank" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
-                <td><?php echo $duracao[$c] ?> min.</td>
+                <td title="<?php echo $horas_minutos ?>"><?php echo $duracao[$c] ?> min.</td>
             </tr>
 <?php
             $c++;
@@ -316,6 +319,9 @@
             $current_colecao = '';
             for ($c = $c; $c < count($titulo); $c++) {
                 $imdb_percent = $imdb[$c] * 10;
+                $horas = floor($duracao[$c] / 60);
+                $minutos = ($duracao[$c] % 60);
+                $horas_minutos = sprintf('%02dh%02d', $horas, $minutos);
                 if ($colecao[$c] != $current_colecao) {
 ?>           
                 <tr class="headerColecao"><th colspan="6" style="font-weight: normal"><?php echo $colecao[$c] ?></th></tr>
@@ -326,10 +332,10 @@
             <tr>
                 <td><?php echo $c + 1 ?></td>
                 <td id="<?php echo $imdbid[$c] . $codbarras[$c] . $c ?>" class="titulo"><?php echo $titulo[$c] ?></td>
-                <td><?php echo $ano[$c] ?></td>
+                <td title="<?php echo date("d/m/Y", strtotime($lancamento[$c])) ?>"><?php echo date("Y", strtotime($lancamento[$c])) ?></td>
                 <td><?php echo $diretor[$c] ?></td>
                 <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" target="_blank" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
-                <td><?php echo $duracao[$c] ?> min.</td>
+                <td title="<?php echo $horas_minutos ?>"><?php echo $duracao[$c] ?> min.</td>
             </tr>
 <?php
                 $current_colecao = $colecao[$c];
@@ -351,14 +357,17 @@
 <?php
             for ($c = 0; $c < count($titulo); $c++) {
                 $imdb_percent = $imdb[$c] * 10;
+                $horas = floor($duracao[$c] / 60);
+                $minutos = ($duracao[$c] % 60);
+                $horas_minutos = sprintf('%02dh%02d', $horas, $minutos);
 ?>
             <tr>
                 <td><?php echo $c + 1 ?></td>
                 <td id="<?php echo $imdbid[$c] . $codbarras[$c] . $c ?>" class="titulo"><?php echo $titulo[$c] ?></td>
-                <td><?php echo $ano[$c] ?></td>
+                <td title="<?php echo date("d/m/Y", strtotime($lancamento[$c])) ?>"><?php echo date("Y", strtotime($lancamento[$c])) ?></td>
                 <td><?php echo $diretor[$c] ?></td>
                 <td><div class="imdbdiv" style="width: <?php echo $imdb_percent ?>%"><a class="imdblink" target="_blank" href="https://www.imdb.com/title/<?php echo $imdbid[$c] ?>"><?php echo $imdb[$c] ?></a></div></td>
-                <td><?php echo $duracao[$c] ?> min.</td>
+                <td title="<?php echo $horas_minutos ?>"><?php echo $duracao[$c] ?> min.</td>
             </tr>
 <?php
             }

@@ -41,23 +41,24 @@ $(function() {
     var c;
     $('.titulo').on('click', function() {
         c = this.id.substring(22,25);
-        $('#filmeInfo' + c).show();
+        $('.filmeInfo').hide();
+        $('#filmeInfo' + c).fadeIn();
+        $('#posterImg').hide();
         $('#posterImg').attr('src', 'images/posters/' + this.id.substring(0,9) + '.jpg');
-        $('#posterImg').show();
+        $('#posterImg').fadeIn();
+        $('#codBarrasImg').hide();
         $('#codBarrasImg').attr('src', 'images/barcodes/' + this.id.substring(9,22) + '.gif');
-        $('#codBarrasImg').show();
+        $('#codBarrasImg').fadeIn();
     });
 
     $('#posterImg').on('click', function() {
-        $('#filmeInfo' + c).hide();
-        $('#posterImg').hide();
-        $('#posterImg').attr('src', '');
-        $('#codBarrasImg').hide();
-        $('#codBarrasImg').attr('src', '');
+        $('.filmeInfo').fadeOut();
+        $('#posterImg').fadeOut();
+        $('#codBarrasImg').fadeOut();
     });
 
     $('#novo').on('click', function() {
-        $('#addFilme').toggle();
+        $('#addFilme').fadeToggle();
     });
 
     $('#submit').on('click', function() {
