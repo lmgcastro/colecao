@@ -42,7 +42,7 @@ body {
 
 .filmeInfo {
     top: 50%;
-    left: 15%;
+    left: 60%;
     padding: 5px;
     width: 150px;
     height: 420px;
@@ -54,9 +54,17 @@ body {
     background-color: white;
 }
 
+.codBarras {
+    cursor: pointer;
+}
+
+#divTrocar {
+    float: right;
+}
+
 #posterImg {
     top: 50%;
-    left: 50%;
+    left: 40%;
     width: 400px;
     height: 600px;
     display: none;
@@ -67,24 +75,25 @@ body {
 
 #codBarrasImg {
     top: 50%;
-    right: 10%;
+    left: 50%;
     width: 226px;
     height: 100px;
     display: none;
     position: fixed;
     margin-top: -50px;
+    margin-left: -113px;
 }
 
 #tblFilmes {
     width: 49.5%;
-    float: left;
+    float: right;
     border-collapse: collapse;
     background:rgba(255,255,255,0.7);
 }
 
 #tblColecoes {
     width: 49.5%;
-    float: right;
+    float: left;
     border-collapse: collapse;
     background:rgba(255,255,255,0.7);
 }
@@ -145,6 +154,7 @@ td {
     width: 80%;
     margin: auto;
     border-collapse: collapse;
+    background:rgba(255,255,255,0.7);
 }
 
 #addCd {
@@ -158,6 +168,7 @@ td {
     width: 85%;
     margin: auto;
     border-collapse: collapse;
+    background:rgba(255,255,255,0.7);
 }
 
 .lido {
@@ -188,6 +199,7 @@ td {
     width: 85%;
     margin: auto;
     border-collapse: collapse;
+    background:rgba(255,255,255,0.7);
 }
 
 .completo {

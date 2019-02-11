@@ -72,6 +72,23 @@
     if ($resultCheck == 0) {
         $sql = "INSERT INTO imdb VALUES ('$imdbid', $imdb);";
         mysqli_query($conn, $sql);
+    } else {
+            $sql = "SELECT c.Colecao, f.Titulo, f.Ordem, f.Lancamento, d.Diretor, d2.Distribuidora, f.IMDb, f.Duracao 
+            FROM filme f 
+            INNER JOIN colecao c ON f.Colecao = c.ID INNER JOIN diretor d ON f.Diretor = d.ID 
+            INNER JOIN distribuidora d2 ON f.Distribuidora = d2.ID INNER JOIN imdb i ON f.IMDb = i.ID 
+            WHERE i.ID = '$imdbid';";
+            $result = mysqli_query($conn, $sql);
+            $resultCheck = mysqli_num_rows($result);
+            $row = mysqli_fetch_assoc($result);
+            $colecao = $row['Colecao'];
+            $titulo = $row['Titulo'];
+            $ordem_titulo = $row['Ordem'];
+            $lancamento = $row['Lancamento'];
+            $diretor = $row['Diretor'];
+            $distribuidora = $row['Distribuidora'];
+            $imdb = $row['IMDb'];
+            $duracao = $row['Duracao'];
     }
 
     //CHECANDO EXISTENCIA DA MIDIA

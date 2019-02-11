@@ -40,27 +40,34 @@ $(function() {
     });
     var c;
     $('.titulo').on('click', function() {
-        c = this.id.substring(22,25);
+        var info = this.id.split("_");
         $('.filmeInfo').hide();
-        $('#filmeInfo' + c).fadeIn();
+        $('#filmeInfo' + info[1]).fadeIn();
         $('#posterImg').hide();
-        $('#posterImg').attr('src', 'images/posters/' + this.id.substring(0,9) + '.jpg');
+        $('#posterImg').attr('src', 'images/posters/' + info[0] + '.jpg');
         $('#posterImg').fadeIn();
-        $('#codBarrasImg').hide();
-        $('#codBarrasImg').attr('src', 'images/barcodes/' + this.id.substring(9,22) + '.gif');
+    });
+    $('.codBarras').on('click', function() {
+        $('#codBarrasImg').attr('src', 'images/barcodes/' + this.id + '.gif');
         $('#codBarrasImg').fadeIn();
     });
-
+    $('#codBarrasImg').on('click', function() {
+        $('#codBarrasImg').fadeOut();
+    });
+    $('.btnTrocar').on('click', function() {
+        var infos = this.id.split("_");
+        $('#filmeInfo' + infos[0]).hide();
+        $('#codBarrasImg').fadeOut();
+        $('#filmeInfo' + infos[1]).show();
+    });
     $('#posterImg').on('click', function() {
         $('.filmeInfo').fadeOut();
         $('#posterImg').fadeOut();
         $('#codBarrasImg').fadeOut();
     });
-
     $('#novo').on('click', function() {
         $('#addFilme').fadeToggle();
     });
-
     $('#submit').on('click', function() {
         window.open('https://barcode.tec-it.com/en/EAN13?data=' + $('#codBarrasForm').val());
     });
