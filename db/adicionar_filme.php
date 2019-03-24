@@ -85,7 +85,7 @@
 
     $response = json_decode($response, true); //because of true, it's in an array
 
-    $titulo = $response['original_title'];
+    $titulo = mysqli_real_escape_string($conn, $response['original_title']);
     $ordem_titulo = $titulo;
     if (substr($titulo, 0, 4) == 'The ') {
         $ordem_titulo = substr($titulo, 4, strlen($titulo));
