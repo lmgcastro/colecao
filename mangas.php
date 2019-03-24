@@ -45,7 +45,6 @@
         <li><button id="botaoNovo">Novo</button>
             <button id="botaoExistente">+</button></li>
         <li><a href="filmes.php">Filmes</a></li>
-        <li><a href="cds.php">CDs</a></li>
         <li><a href="quadrinhos.php">Quadrinhos</a></li>
         <li><a id="atual" href="#">Mangás</a></li>
     </ul>

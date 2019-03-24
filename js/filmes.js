@@ -1,4 +1,25 @@
 $(function() {
+    $('#filmes_posters').on('keypress, keydown', function(event) {
+        var character = String.fromCharCode(event.keyCode).toLowerCase();
+        switch (character) {
+            case character:
+                $('.' + character)[0].scrollIntoView({
+                    behavior: "instant", // or "auto" or "instant"
+                    block: "start" // or "end"
+                });
+            console.log(character);
+            break;
+        }
+    });
+    
+    $('.poster').on('click', function() {
+        var info1 = this.id.split("_");
+        $('.filmeInfo').hide();
+        $('#filmeInfo' + info1[1]).fadeIn();
+        $('#posterImg').hide();
+        $('#posterImg').attr('src', 'images/posters/' + info1[0] + '.jpg');
+        $('#posterImg').fadeIn();
+    });
     $('#△').prop('disabled', true);
     $('#▽').prop('disabled', true);
     $('#fieldsCombo').change(function() {
@@ -47,6 +68,7 @@ $(function() {
         $('#posterImg').attr('src', 'images/posters/' + info[0] + '.jpg');
         $('#posterImg').fadeIn();
     });
+
     $('.codBarras').on('click', function() {
         $('#codBarrasImg').attr('src', 'images/barcodes/' + this.id + '.gif');
         $('#codBarrasImg').fadeIn();
@@ -68,7 +90,7 @@ $(function() {
     $('#novo').on('click', function() {
         $('#addFilme').fadeToggle();
     });
-    $('#submit').on('click', function() {
+    /*$('#submit').on('click', function() {
         window.open('https://barcode.tec-it.com/en/EAN13?data=' + $('#codBarrasForm').val());
-    });
+    });*/
 });

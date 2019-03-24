@@ -3,6 +3,11 @@ body {
     background-image: url("../images/background.jpg");
 }
 
+#filmes_posters {
+    font-family: "Trebuchet MS";
+    background-image: url("../images/background2.png");
+}
+
 .nav {
     color: white;
     padding: 10px 0;
@@ -27,7 +32,7 @@ body {
     color: lightgrey;
 }
 
-#novo, #filtrar {
+#switch, #novo, #filtrar {
     color: white;
     background-color: black;
 }
@@ -85,14 +90,14 @@ body {
 }
 
 #tblFilmes {
-    width: 49.5%;
+    width: 50%;
     float: right;
     border-collapse: collapse;
     background:rgba(255,255,255,0.7);
 }
 
 #tblColecoes {
-    width: 49.5%;
+    width: 50%;
     float: left;
     border-collapse: collapse;
     background:rgba(255,255,255,0.7);
@@ -133,7 +138,7 @@ td {
 }
 
 #addFilme {
-    width: 94%;
+    width: 70%;
     margin: auto;
     display: none;
     border: 1px solid black;

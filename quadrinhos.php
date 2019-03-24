@@ -29,7 +29,6 @@
     <ul class="nav">
         <li><button id="novo">Novo</button></li>
         <li><a href="filmes.php">Filmes</a></li>
-        <li><a href="cds.php">CDs</a></li>
         <li><a id="atual" href="#">Quadrinhos</a></li>
         <li><a href="mangas.php">Mangás</a></li>
     </ul>
